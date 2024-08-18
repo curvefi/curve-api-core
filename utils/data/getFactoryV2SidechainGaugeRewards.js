@@ -7,14 +7,13 @@ import { flattenArray, uniq, arrayToHashmap } from '#root/utils/Array.js';
 import { getNowTimestamp } from '#root/utils/Date.js';
 import getTokensPrices from '#root/utils/data/tokens-prices.js';
 import getAssetsPrices from '#root/utils/data/assets-prices.js';
-import configs from '#root/constants/configs/index.js'
+import configsPromise from '#root/constants/configs/index.js'
 import ERC20_ABI from '#root/constants/abis/erc20.json' assert { type: 'json' };
 import SIDECHAIN_FACTO_GAUGE_ABI from '#root/constants/abis/sidechain-gauge.json' assert { type: 'json' };
 import COIN_ADDRESS_COINGECKO_ID_MAP from '#root/constants/CoinAddressCoingeckoIdMap.js';
-import COIN_ADDRESS_REPLACEMENT_MAP from '#root/constants/CoinAddressReplacementMap.js';
 
 export default memoize(async ({ blockchainId, gauges }) => {
-  const config = configs[blockchainId];
+  const config = (await configsPromise)[blockchainId];
   if (typeof config === 'undefined') {
     throw new Error(`No factory data for blockchainId "${blockchainId}"`);
   }
@@ -139,10 +138,7 @@ export default memoize(async ({ blockchainId, gauges }) => {
     const tokenSymbol = tokenData.find(({ metaData }) => metaData.rewardTokenAddress === rewardTokenAddress && metaData.name === name && metaData.type === 'symbol').data;
     const tokenDecimals = tokenData.find(({ metaData }) => metaData.rewardTokenAddress === rewardTokenAddress && metaData.name === name && metaData.type === 'decimals').data;
 
-    const effectiveTokenRewardAddressForPrice = (
-      COIN_ADDRESS_REPLACEMENT_MAP[blockchainId]?.[rewardTokenAddress.toLowerCase()] ||
-      rewardTokenAddress.toLowerCase()
-    );
+    const effectiveTokenRewardAddressForPrice = rewardTokenAddress.toLowerCase();
 
     const tokenPrice = (
       coinAddressesAndPricesMap[effectiveTokenRewardAddressForPrice] ||

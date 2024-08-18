@@ -1,11 +1,13 @@
-import configs from './configs.js';
-import validateConfigs from './init-validation.js';
+import configsPromise from './configs.js';
 
-validateConfigs(configs);
-
-const getConfigByRpcUrl = (rpcUrl) => (
-  Array.from(Object.entries(configs)).find(([, config]) => config.rpcUrl === rpcUrl)
+const getConfigByRpcUrl = async (rpcUrl) => (
+  Object.entries(await configsPromise).find(([, config]) => config.rpcUrl === rpcUrl)
 );
 
-export default configs;
-export { getConfigByRpcUrl };
+const allBlockchainIds = configsPromise.then((configs) => Object.keys(configs));
+
+export default configsPromise;
+export {
+  getConfigByRpcUrl,
+  allBlockchainIds,
+};

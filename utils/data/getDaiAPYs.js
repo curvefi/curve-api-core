@@ -1,15 +1,13 @@
 import memoize from 'memoizee';
-import Web3 from 'web3';
-import configs from '#root/constants/configs/index.js';
 import { multiCall } from '../Calls.js';
 import { uintToBN } from '../Web3/index.js';
 import { lc } from '../String.js';
+import { ethereumWeb3Config } from '../Web3/web3.js';
 
 const MAKER_POT_ADDRESS = '0x197e90f9fad81970ba7976f33cbd77088e5d7cf7';
 const MAKER_POT_ABI_SUBSET = [{ "constant": true, "inputs": [], "name": "dsr", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }];
 
-const { rpcUrl, multicall2Address } = configs.ethereum;
-const web3 = new Web3(rpcUrl);
+const { web3, multicall2Address } = ethereumWeb3Config;
 
 const getDaiAPYs = memoize(async () => {
   const dsr = await multiCall([{

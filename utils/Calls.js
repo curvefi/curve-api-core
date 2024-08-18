@@ -1,14 +1,11 @@
-import Web3 from 'web3';
 import memoize from 'memoizee';
-import configs, { getConfigByRpcUrl } from '#root/constants/configs/index.js'
-import * as WEB3_CONSTANTS from '#root/constants/Web3.js';
-import { ZERO_ADDRESS } from '#root/utils/Web3/web3.js';
+import { getConfigByRpcUrl } from '#root/constants/configs/index.js'
+import { ethereumWeb3Config, ZERO_ADDRESS } from '#root/utils/Web3/web3.js';
 import { IS_DEV } from '#root/constants/AppConstants.js'
 import { sequentialPromiseMap } from '#root/utils/Async.js';
 import MULTICALL2_ABI from '../constants/abis/multicall2.json' assert { type: 'json' };
 import { getArrayChunks, flattenArray } from '#root/utils/Array.js';
 
-const web3 = new Web3(WEB3_CONSTANTS.RPC_URL);
 const MAX_MULTICALL_RETRIES = 2;
 
 const FALLBACK_DECODED_PARAMETERS_VALUES = {
@@ -54,8 +51,8 @@ const multiCall = async (callsConfig, isDebugging = false, retryCount = 0) => {
     // to easily identify what the call's results reference
     metaData: undefined,
     networkSettings: {
-      web3,
-      multicall2Address: configs.ethereum.multicall2Address,
+      web3: ethereumWeb3Config.web3,
+      multicall2Address: ethereumWeb3Config.multicall2Address,
       blockNumber: undefined,
     },
     superSettings: {
@@ -107,7 +104,7 @@ const multiCall = async (callsConfig, isDebugging = false, retryCount = 0) => {
     }
   }
 
-  const network = getConfigByRpcUrl(augmentedCallsConfig[0].networkSettings.web3.currentProvider.host)?.[0];
+  const network = await getConfigByRpcUrl(augmentedCallsConfig[0].networkSettings.web3.currentProvider.host)?.[0];
 
   const hasMetaData = augmentedCallsConfig.some(({ metaData }) => typeof metaData !== 'undefined');
   const calls = augmentedCallsConfig.map((callConfig) => {

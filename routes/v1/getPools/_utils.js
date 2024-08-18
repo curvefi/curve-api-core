@@ -1,6 +1,4 @@
 import { flattenArray, arrayToHashmap } from '#root/utils/Array.js';
-import { IGNORED_TOKEN_ADDRESSES, IGNORED_POOL_ADDRESSES } from '#root/utils/data/curve-prices.js';
-import { lc } from '#root/utils/String.js';
 
 const LOG_DEBUG = false;
 
@@ -10,12 +8,7 @@ const getImplementation = ({
   poolInfo,
   implementationAddressMap,
 }) => (
-  (registryId === 'factory-crypto') ? (
-    // Meta crypto facto pools do not work with a special implementation:
-    // rather, they simply use the meta pool's lp token as one of their tokens, and expose a
-    // zap to ease interactions with underlyings.
-    config.factoryCryptoMetaBasePoolLpTokenAddressMap?.get(poolInfo.coinsAddresses.find((address) => config.factoryCryptoMetaBasePoolLpTokenAddressMap?.has(address.toLowerCase()))?.toLowerCase()) || ''
-  ) : (registryId === 'factory' || registryId === 'factory-tricrypto' || registryId === 'factory-twocrypto' || registryId === 'factory-stable-ng') ? (
+  (registryId === 'factory-tricrypto' || registryId === 'factory-twocrypto' || registryId === 'factory-stable-ng') ? (
     (implementationAddressMap.get(poolInfo.implementationAddress?.toLowerCase()) || '')
   ) : ''
 );
@@ -34,19 +27,8 @@ const deriveMissingCoinPricesSinglePass = async ({
   poolInfo,
   otherPools,
   internalPoolPrices,
-  mainRegistryLpTokensPricesMap,
   otherRegistryTokensPricesMap,
 }) => {
-  // Skip over ignored pools
-  if ((IGNORED_POOL_ADDRESSES[blockchainId] || []).includes(lc(poolInfo.address))) {
-    return coins;
-  }
-
-  // Skip over pools with ignored tokens
-  if (coins.some(({ address }) => (IGNORED_TOKEN_ADDRESSES[blockchainId] || []).includes(lc(address)))) {
-    return coins;
-  }
-
   /**
    * Method 1.a: A coin's price is unknown, another one is known. Use the known price,
    * alongside the price oracle, to derive the other coin's price. This method requires
@@ -203,27 +185,6 @@ const deriveMissingCoinPricesSinglePass = async ({
     );
   }
 
-  /**
-   * Method 5: Same as method 4, with base pools lp token prices instead coins prices.
-   */
-  const canUseMainPoolBaseLpTokenPrice = coins.some(({ address, usdPrice }) => (
-    usdPrice === null &&
-    mainRegistryLpTokensPricesMap[address.toLowerCase()]
-  ));
-
-  if (canUseMainPoolBaseLpTokenPrice) {
-    if (LOG_DEBUG) console.log('Missing coin price: using method 5 to derive price', poolInfo.id);
-
-    return (
-      coins.map((coin) => (
-        coin.usdPrice === null ? {
-          ...coin,
-          usdPrice: (mainRegistryLpTokensPricesMap[coin.address.toLowerCase()] || null),
-        } : coin
-      ))
-    );
-  }
-
   return coins;
 };
 
@@ -234,7 +195,6 @@ const deriveMissingCoinPrices = async ({
   poolInfo,
   otherPools,
   internalPoolPrices,
-  mainRegistryLpTokensPricesMap,
   otherRegistryTokensPricesMap,
 }) => {
   let iteration = 0;
@@ -254,7 +214,6 @@ const deriveMissingCoinPrices = async ({
       poolInfo,
       otherPools,
       internalPoolPrices,
-      mainRegistryLpTokensPricesMap,
       otherRegistryTokensPricesMap,
     });
   }

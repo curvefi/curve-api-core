@@ -1,5 +1,3 @@
-import Request from '#root/utils/Request.js';
-
 /**
  * Fetch paginated endpoints, returns an array of the pages' results.
  * A paginated endpoint is expected to have (names are optionally configurable)
@@ -40,7 +38,7 @@ const fetchPages = async (url, data = {}, paginationPropsOverride = {}) => {
       [paginationProps.PAGE]: page,
       [paginationProps.PER_PAGE]: data[paginationProps.PER_PAGE],
     }
-    const result = await (await Request.get(url, dataWithPaginationParams)).json();
+    const result = await (await fetch(url, dataWithPaginationParams)).json();
 
     fetchedPages.push(...result[paginationProps.DATA]);
     page = result[paginationProps.PAGE] + 1;

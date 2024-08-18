@@ -3,10 +3,11 @@
 import Web3 from 'web3';
 import memoize from 'memoizee';
 import Multicall from '#root/constants/abis/multicall.json' assert { type: 'json' };
-import { RPC_URL, RPC_URL_BSC } from '#root/constants/Web3.js';
 
-const web3 = new Web3(Web3?.givenProvider?.networkVersion === '1' ? Web3.givenProvider : RPC_URL);
-const MulticallContract = new web3.eth.Contract(Multicall, '0xeefBa1e63905eF1D7ACbA5a8513c70307C1cE441');
+const ethereumWeb3Config = {
+  web3: new Web3(`https://lb.drpc.org/ogrpc?network=ethereum&dkey=${process.env.DRPC_API_KEY}`),
+  multicall2Address: '0x5ba1e12693dc8f9c48aad8770482f4739beed696',
+};
 
 // Contract instances cache store
 const getContractInstance = memoize((address, abi, account, library, chainId) => (
@@ -73,8 +74,8 @@ const getDecodedData = ({ augmentedCallsConfig, returnData, hasMetaData = false 
     const outputSignature = abi.find(({ name }) => name === methodName).outputs;
 
     const data = outputSignature.length > 1 ?
-      web3.eth.abi.decodeParameters(outputSignature.map(({ type }) => type), hexData) :
-      web3.eth.abi.decodeParameter(outputSignature[0].type, hexData);
+      ethereumWeb3Config.web3.eth.abi.decodeParameters(outputSignature.map(({ type }) => type), hexData) :
+      ethereumWeb3Config.web3.eth.abi.decodeParameter(outputSignature[0].type, hexData);
 
     if (hasMetaData) return { data, metaData };
     return data;
@@ -137,9 +138,7 @@ const changeNetwork = async (config) => {
 
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
-export default web3;
 export {
-  MulticallContract,
   multiCall,
   getEncodedCalls,
   getDecodedData,
@@ -147,4 +146,5 @@ export {
   canAutomaticallyChangeNetwork,
   changeNetwork,
   ZERO_ADDRESS,
+  ethereumWeb3Config,
 };

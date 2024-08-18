@@ -1,16 +1,16 @@
-import configs from '#root/constants/configs/index.js';
+import { allBlockchainIds } from '#root/constants/configs/index.js';
 import swr from '#root/utils/swr.js';
 import { IS_DEV } from '#root/constants/AppConstants.js';
 import { arrayToHashmap } from '#root/utils/Array.js';
 import { addTtlRandomness } from '#root/utils/Number.js';
 import { getFunctionParamObjectKeys } from '#root/utils/Function.js';
+import { sequentialPromiseReduce } from '#root/utils/Async.js';
 
 const getNowMs = () => Number(Date.now());
-const allBlockchainIds = Object.keys(configs);
 const allRegistryIds = [
+  'factory-stable-ng',
   'factory-twocrypto',
   'factory-tricrypto',
-  'factory-stable-ng',
 ];
 
 const formatJsonSuccess = ({ generatedTimeMs, ...data }, success = true) => ({
@@ -66,11 +66,11 @@ class NotFoundError extends Error {
  * }
  * ```
  */
-const sanitizeParams = (cb, query, paramSanitizers) => {
+const sanitizeParams = async (cb, query, paramSanitizers) => {
   const fnParamKeys = getFunctionParamObjectKeys(cb);
 
   // Run sanitizers
-  const sanitizedParams = arrayToHashmap(fnParamKeys.reduce((sanitizedParamsAccu, key) => {
+  const sanitizedParams = arrayToHashmap(await sequentialPromiseReduce(fnParamKeys, async (key, i, sanitizedParamsAccu) => {
     const sanitizerFn = paramSanitizers[key];
     if (typeof sanitizerFn === 'undefined') {
       throw new Error(`Missing param sanitizer function for param ${key}`);
@@ -81,21 +81,15 @@ const sanitizeParams = (cb, query, paramSanitizers) => {
       ...arrayToHashmap(sanitizedParamsAccu),
     };
 
-    const { isValid, defaultValue } = sanitizerFn(partlySanitizedQuery);
+    const { isValid, defaultValue } = await sanitizerFn(partlySanitizedQuery);
     if (typeof partlySanitizedQuery[key] === 'undefined') {
       if (typeof defaultValue !== 'undefined') {
-        return [
-          ...sanitizedParamsAccu,
-          [key, defaultValue],
-        ];
+        return [key, defaultValue];
       } else {
         throw new ParamError(`Param "${key}" must not be undefined`);
       }
     } else if (isValid === true) {
-      return [
-        ...sanitizedParamsAccu,
-        [key, partlySanitizedQuery[key]],
-      ];
+      return [key, partlySanitizedQuery[key]];
     } else {
       throw new ParamError(`Invalid value for param "${key}": "${partlySanitizedQuery[key]}"`);
     }
@@ -111,9 +105,8 @@ const DEFAULT_OPTIONS = {
   returnFlatData: false,
   appendGeneratedTime: true,
   paramSanitizers: {
-    blockchainId: ({ blockchainId }) => ({
-      isValid: allBlockchainIds.includes(blockchainId),
-      defaultValue: 'ethereum',
+    blockchainId: async ({ blockchainId }) => ({
+      isValid: (await allBlockchainIds).includes(blockchainId),
     }),
     // Note: we could technically go as far as checking if the registry is part of
     // the provided blockchainId (since both params are always passed together), but
@@ -122,7 +115,7 @@ const DEFAULT_OPTIONS = {
     // combination, so we let the api endpoint logic handle this case and remain generic.
     registryId: ({ registryId }) => ({
       isValid: allRegistryIds.includes(registryId),
-      defaultValue: 'main',
+      defaultValue: allRegistryIds[0],
     }),
   },
 };
@@ -168,7 +161,7 @@ const fn = (cb, options = {}) => {
   const callback = (
     rMaxAgeSec !== null ? (
       async (query) => {
-        const params = sanitizeParams(cb, query, paramSanitizers);
+        const params = await sanitizeParams(cb, query, paramSanitizers);
         const cacheKeyStr = (typeof cacheKey === 'function' ? cacheKey(params) : cacheKey);
 
         return (await swr(
@@ -179,7 +172,7 @@ const fn = (cb, options = {}) => {
       }
     ) : (
       async (query) => {
-        const params = sanitizeParams(cb, query, paramSanitizers);
+        const params = await sanitizeParams(cb, query, paramSanitizers);
         const cacheKeyStr = (typeof cacheKeyCDN === 'function' ? cacheKeyCDN(params) : cacheKeyCDN);
 
         return logRuntime(() => addGeneratedTimeFn(cb(params)), cacheKeyStr);
@@ -243,6 +236,5 @@ export {
   formatJsonError,
   ParamError,
   NotFoundError,
-  allBlockchainIds,
   allRegistryIds,
 };

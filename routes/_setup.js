@@ -6,7 +6,8 @@ import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import v1Redirects from '#root/routes/v1/_redirects.json' assert { type: 'json' };
 import rootRouteHandler from '#root/routes/root.js';
-import { allBlockchainIds, allRegistryIds } from '#root/utils/api.js';
+import { allRegistryIds } from '#root/utils/api.js';
+import { allBlockchainIds } from '#root/constants/configs/index.js';
 
 const REDIRECT_PARAM_REGEX = /(\[[a-zA-Z0-9]+(?:=[a-zA-Z0-9]+)?\])/g;
 
@@ -85,7 +86,7 @@ export default async function (app) {
             required: true,
             schema: {
               type: 'string',
-              enum: allBlockchainIds.sort((a, b) => (
+              enum: (await allBlockchainIds).sort((a, b) => (
                 a === 'ethereum' ? -1 :
                   b === 'ethereum' ? 1 :
                     (a < b) ? -1 :

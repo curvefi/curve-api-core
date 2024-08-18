@@ -1,6 +1,5 @@
 import memoize from 'memoizee';
 import { backOff } from 'exponential-backoff';
-import Request from '#root/utils/Request.js';
 import { arrayToHashmap } from '#root/utils/Array.js';
 import { sequentialPromiseMap } from '#root/utils/Async.js';
 import getAssetsPrices from '#root/utils/data/assets-prices.js';
@@ -19,7 +18,7 @@ const getTokensPrices = memoize(async (addresses, platform = 'ethereum') => {
 
   // https://defillama.com/docs/api
   const pricesChunks = await sequentialPromiseMap(addresses, (addressesChunk) => (
-    backOff(() => Request.get(`https://coins.llama.fi/prices/current/${addressesChunk.map((a) => `${platform}:${a}`).join(',')}`), {
+    backOff(() => fetch(`https://coins.llama.fi/prices/current/${addressesChunk.map((a) => `${platform}:${a}`).join(',')}`), {
       retry: (e, attemptNumber) => {
         console.log(`defillama retrying!`, { attemptNumber, addressesChunk });
         return true;

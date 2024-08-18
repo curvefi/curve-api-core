@@ -1,9 +1,8 @@
 import memoize from 'memoizee';
-import Web3 from 'web3';
-import configs from '#root/constants/configs/index.js';
 import { lc } from '#root/utils/String.js';
 import { multiCall } from '#root/utils/Calls.js';
 import AGGREGATOR_STABLE_PRICE_ABI from '#root/constants/abis/AggregatorStablePrice.json' assert { type: 'json' };
+import { ethereumWeb3Config } from '#root/utils/Web3/web3.js';
 
 const CRVUSD_ADDRESSES = {
   ethereum: lc('0xf939e0a03fb07f59a73314e73794be0e57ac1b4e'),
@@ -17,8 +16,7 @@ const CRVUSD_ADDRESSES = {
 
 const AGGREGATOR_STABLE_PRICE_ADDRESS = '0x18672b1b0c623a30089A280Ed9256379fb0E4E62';
 
-const { rpcUrl, multicall2Address } = configs.ethereum;
-const web3 = new Web3(rpcUrl);
+const { web3, multicall2Address } = ethereumWeb3Config;
 
 const getCrvusdPrice = memoize(async () => {
   const [crvusdPrice] = await multiCall([{

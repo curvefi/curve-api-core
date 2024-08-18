@@ -38,20 +38,13 @@
  * 2. The server doesn't need to do that assembling too often, CDN caching makes sure of that
  */
 
-import configs from '#root/constants/configs/index.js';
 import getAllCurvePoolsData from '#root/utils/data/curve-pools-data.js';
 import { fn } from '#root/utils/api.js';
 import { sum } from '#root/utils/Array.js';
-
-const allBlockchainIds = Array.from(Object.keys(configs));
+import { allBlockchainIds } from '#root/constants/configs/index.js';
 
 export default fn(async ({ blockchainId }) => {
-  const blockchainIds = (
-    blockchainId === 'all' ?
-      allBlockchainIds :
-      [blockchainId]
-  );
-
+  const blockchainIds = [blockchainId];
   const poolData = (
     (await getAllCurvePoolsData(blockchainIds, false))
       .filter(({ usdTotal }) => (usdTotal === 0))
@@ -66,9 +59,8 @@ export default fn(async ({ blockchainId }) => {
   cacheKeyCDN: ({ blockchainId }) => `getAllEmptyPools-${blockchainId}`,
   paramSanitizers: {
     // Override default blockchainId sanitizer for this endpoint
-    blockchainId: ({ blockchainId }) => ({
-      isValid: allBlockchainIds.includes(blockchainId),
-      defaultValue: 'all',
+    blockchainId: async ({ blockchainId }) => ({
+      isValid: (await allBlockchainIds).includes(blockchainId),
     }),
   },
 });
