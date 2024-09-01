@@ -58,3 +58,4 @@ swr.onAny((event, payload) => {
 
 
 export default swr;
+export { storage };

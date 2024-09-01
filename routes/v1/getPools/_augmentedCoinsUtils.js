@@ -1,5 +1,5 @@
 import { deriveMissingCoinPrices } from '#root/routes/v1/getPools/_utils.js';
-import { lc } from '#root/utils/String.js';
+import { setTokenPrice } from '#root/utils/data/tokens-prices-store.js';
 
 const isDefinedCoin = (address) => address !== '0x0000000000000000000000000000000000000000';
 
@@ -10,7 +10,6 @@ const getAugmentedCoinsFirstPass = async ({
   registryId,
   wipMergedPoolData,
   internalPoolsPrices,
-  otherRegistryTokensPricesMap,
 }) => {
   let augmentedCoins;
   const coins = poolInfo.coinsAddresses
@@ -33,39 +32,27 @@ const getAugmentedCoinsFirstPass = async ({
     coins,
     poolInfo,
     otherPools: wipMergedPoolData,
-    internalPoolPrices: internalPoolsPrices[poolInfo.id] || [], //
-    otherRegistryTokensPricesMap, //
+    internalPoolPrices: internalPoolsPrices[poolInfo.id] || [],
   });
 
-  return augmentedCoins;
-};
+  // Save token prices
+  augmentedCoins.forEach(({
+    usdPrice,
+    address,
+  }) => {
+    if (usdPrice !== null) {
+      // We don’t know the pool’s usdTotal at this point yet, so instead use a number
+      // that represents whether this empty or not to give some very rough precedence.
+      const dumbPoolUsdTotal = Number(poolInfo.totalSupply) === 0 ? 0 : 1;
 
-const getAugmentedCoinsSecondPass = async ({
-  poolInfo,
-  blockchainId,
-  registryId,
-  wipMergedPoolData,
-  internalPoolsPrices,
-  otherRegistryTokensPricesMap,
-  missingCoinPrices,
-}) => {
-  const coins = poolInfo.coins.map((coinData) => ({
-    ...coinData,
-    usdPrice: (
-      coinData.usdPrice !== null ? coinData.usdPrice :
-        typeof missingCoinPrices[lc(coinData.address)] !== 'undefined' ? missingCoinPrices[lc(coinData.address)] :
-          null
-    ),
-  }));
-
-  const augmentedCoins = await deriveMissingCoinPrices({
-    blockchainId,
-    registryId,
-    coins,
-    poolInfo,
-    otherPools: wipMergedPoolData,
-    internalPoolPrices: internalPoolsPrices[poolInfo.id] || [], //
-    otherRegistryTokensPricesMap, //
+      setTokenPrice({
+        blockchainId,
+        address,
+        price: usdPrice,
+        poolAddress: poolInfo.address,
+        poolUsdTotal: dumbPoolUsdTotal,
+      });
+    }
   });
 
   return augmentedCoins;
@@ -73,5 +60,4 @@ const getAugmentedCoinsSecondPass = async ({
 
 export {
   getAugmentedCoinsFirstPass,
-  getAugmentedCoinsSecondPass,
 };

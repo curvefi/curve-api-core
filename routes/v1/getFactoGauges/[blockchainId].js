@@ -2,11 +2,10 @@
  * @openapi
  * /getFactoGauges/{blockchainId}:
  *   get:
- *     deprecated: true
  *     tags:
- *       - Deprecated
+ *       - Gauges
  *     description: |
- *       <i>Deprecated: please use `getAllGauges` instead</i>
+ *       Returns information on all gauges on a specific chain
  *     parameters:
  *       - $ref: '#/components/parameters/blockchainId'
  *     responses:

@@ -19,10 +19,10 @@ const attachFactoryTag = (poolData) => ({
   factory: true,
 });
 
-const getAllCurvePoolsData = memoize(async (blockchainIds, preventQueryingFactoData = true) => (
+const getAllCurvePoolsData = memoize(async (blockchainIds) => (
   flattenArray(await sequentialPromiseFlatMap(blockchainIds, async (blockchainId) => (
     Promise.all((await getPlatformRegistries(blockchainId)).registryIds.map((registryId) => (
-      (getPoolsFn.straightCall({ blockchainId, registryId, preventQueryingFactoData }))
+      (getPoolsFn.straightCall({ blockchainId, registryId }))
         .then((res) => res.poolData.map((poolData) => attachBlockchainId(blockchainId, poolData)).map((poolData) => attachRegistryId(registryId, poolData)).map((poolData) => (
           registryId.startsWith('factory') ?
             attachFactoryTag(poolData) :
