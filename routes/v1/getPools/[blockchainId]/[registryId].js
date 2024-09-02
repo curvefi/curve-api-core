@@ -33,7 +33,7 @@ import { multiCall } from '#root/utils/Calls.js';
 import getPlatformRegistries from '#root/utils/data/curve-platform-registries.js';
 import { ZERO_ADDRESS } from '#root/utils/Web3/index.js';
 import { flattenArray, sum, arrayToHashmap, arrayOfIncrements } from '#root/utils/Array.js';
-import { sequentialPromiseReduce, sequentialPromiseMap } from '#root/utils/Async.js';
+import { sequentialPromiseReduce } from '#root/utils/Async.js';
 import getAssetsPrices from '#root/utils/data/assets-prices.js';
 import getTokensPrices from '#root/utils/data/tokens-prices.js';
 import getCrvusdPrice from '#root/utils/data/getCrvusdPrice.js';
@@ -41,10 +41,10 @@ import getETHLSTAPYs from '#root/utils/data/getETHLSTAPYs.js';
 import getDaiAPYs from '#root/utils/data/getDaiAPYs.js';
 import configsPromise from '#root/constants/configs/index.js';
 import COIN_ADDRESS_COINGECKO_ID_MAP from '#root/constants/CoinAddressCoingeckoIdMap.js';
-import { deriveMissingCoinPrices, getImplementation } from '#root/routes/v1/getPools/_utils.js';
+import { getImplementation } from '#root/routes/v1/getPools/_utils.js';
 import { lc } from '#root/utils/String.js';
 import { setTokenPrice, getTokenPrice } from '#root/utils/data/tokens-prices-store.js';
-import { BASE_API_DOMAIN, IS_DEV } from '#root/constants/AppConstants.js';
+import { IS_DEV } from '#root/constants/AppConstants.js';
 import { getAugmentedCoinsFirstPass } from '../_augmentedCoinsUtils.js';
 import toSpliced from 'core-js-pure/actual/array/to-spliced.js'; // For compat w/ Node 18
 
@@ -248,8 +248,6 @@ const getPools = async ({ blockchainId, registryId }) => {
   const poolIds = unfilteredPoolIds.filter((id) => (
     !DISABLED_POOLS_ADDRESSES.includes(unfilteredPoolAddresses[id]?.toLowerCase())
   ));
-
-  const { data: { gauges: factoGauges } } = await (await fetch(`${BASE_API_DOMAIN}/v1/getFactogauges/${blockchainId}`)).json();
 
   const otherRegistryPoolsData = []; // Was used for prices from other registries’ pools, but still used for meta pools data, so gotta find another way to get this data now that otherRegistryPoolsData is retired
 
@@ -811,13 +809,6 @@ const getPools = async ({ blockchainId, registryId }) => {
         )))
     );
 
-    const gaugeData = factoGauges.find(({ swap }) => lc(swap) === lc(poolInfo.address));
-    const gaugeAddress = typeof gaugeData !== 'undefined' ? gaugeData.gauge?.toLowerCase() : undefined;
-    const gaugeRewardsInfo = typeof gaugeData !== 'undefined' ? gaugeData.extraRewards : undefined;
-
-    const totalSupply = poolInfo.totalSupply / 1e18;
-    const lpTokenPrice = totalSupply > 0 ? (usdTotal / totalSupply) : undefined;
-
     const metaPoolBasePoolLpToken = augmentedCoins.find(({ isBasePoolLpToken }) => isBasePoolLpToken);
     const isMetaPool = typeof metaPoolBasePoolLpToken !== 'undefined';
 
@@ -879,47 +870,6 @@ const getPools = async ({ blockchainId, registryId }) => {
       ].filter((o) => o !== null),
     };
 
-    const gaugeRewards = (
-      typeof gaugeRewardsInfo === 'undefined' ?
-        undefined :
-        await sequentialPromiseMap(gaugeRewardsInfo, async ({
-          tokenAddress,
-          apyData,
-          ...rewardInfo
-        }) => {
-          const gaugeTotalSupply = apyData.totalSupply;
-          const poolTotalSupply = poolInfo.totalSupply / 1e18;
-          const gaugeUsdTotal = gaugeTotalSupply / poolTotalSupply * usdTotal;
-          const tokenCoingeckoPrice = apyData.tokenPrice;
-
-          let tokenPrice;
-          const [augmentedCoin] = await deriveMissingCoinPrices({
-            blockchainId,
-            registryId,
-            coins: [{ address: tokenAddress, usdPrice: null }],
-            poolInfo: { id: poolInfo.id }, // Passing a subset of poolInfo to avoid hitting other derivation methods for this very specific use-case
-            otherPools: (
-              wipMergedPoolData
-                .concat({ coins: augmentedCoins, usdTotal }) // Attach this pool's own augmented coins
-            ),
-            internalPoolPrices: internalPoolsPrices[poolInfo.id] || [], //
-          });
-
-          tokenPrice = augmentedCoin.usdPrice || tokenCoingeckoPrice;
-
-          return {
-            ...rewardInfo,
-            tokenAddress,
-            tokenPrice,
-            apy: (
-              apyData.isRewardStillActive ?
-                apyData.rate * 86400 * 365 * tokenPrice / gaugeUsdTotal * 100 :
-                0
-            ),
-          };
-        })
-    );
-
     /**
     * Detect pools with oracles: oracle_method must be present (if not present,
     * call returns default value of zero) and non-zero
@@ -960,12 +910,6 @@ const getPools = async ({ blockchainId, registryId }) => {
       underlyingDecimals: (isMetaPool ? poolInfo.underlyingDecimals : undefined),
       underlyingCoins,
       usdTotalExcludingBasePool,
-      gaugeAddress,
-      gaugeRewards: (
-        (gaugeAddress && !gaugeData.is_killed) ?
-          (gaugeRewards || []) :
-          undefined
-      ),
       oracleMethod: undefined, // Don't return this value, unneeded for api consumers
       assetTypes: undefined, // Don't return this value, unneeded for api consumers
       usesRateOracle,
