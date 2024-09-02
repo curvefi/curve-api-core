@@ -3,7 +3,7 @@ import { lc } from '#root/utils/String.js';
 import YAML from 'yaml';
 
 const yamlConfigFilesUrls = {
-  sepolia: 'https://cdn.jsdelivr.net/gh/curvefi/curve-lite/deployments/tutorial_arb_sepolia.yaml',
+  sepolia: 'https://cdn.jsdelivr.net/gh/curvefi/curve-core/deployments/tutorial_arb_sepolia.yaml',
 };
 
 const configsPromise = Promise.all(Object.entries(yamlConfigFilesUrls).map(async ([networkId, configUrl]) => {
@@ -13,7 +13,7 @@ const configsPromise = Promise.all(Object.entries(yamlConfigFilesUrls).map(async
   const config = {
     hasNoMainRegistry: true, // No main registry deployed nor address provider
     poolsBaseUrlOld: null,
-    poolsBaseUrl: `https://lite.curve.fi/#/${networkId}/pools/`,
+    poolsBaseUrl: `https://core.curve.fi/#/${networkId}/pools/`,
     shortId: networkId,
     nativeCurrencySymbol: yamlConfig.config.native_currency_symbol,
     chainId: yamlConfig.config.chain_id,

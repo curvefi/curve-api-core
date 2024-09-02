@@ -15,18 +15,18 @@ console.log('Using Redis node:', cacheNode);
 
 const redis = new Redis(cacheNode); // To update prod redis server
 
-// curve-api-lite shares the same dev redis cache as curve-api, this namespace prevents key collisions
-const getLiteApiKey = (key) => `##LITE##${key}`;
+// curve-api-core shares the same dev redis cache as curve-api, this namespace prevents key collisions
+const getCoreApiKey = (key) => `##CORE##${key}`;
 
 const storage = {
   async getItem(key) {
-    return redis.get(getLiteApiKey(key));
+    return redis.get(getCoreApiKey(key));
   },
   async setItem(key, value) {
-    await redis.set(getLiteApiKey(key), value, 'EX', (CACHE_SETTINGS.maxTimeToLive / 1000));
+    await redis.set(getCoreApiKey(key), value, 'EX', (CACHE_SETTINGS.maxTimeToLive / 1000));
   },
   async removeItem(key) {
-    await redis.del(getLiteApiKey(key));
+    await redis.del(getCoreApiKey(key));
   },
 };
 

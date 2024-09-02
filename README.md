@@ -1,12 +1,12 @@
 # Description
 
-A simpler, stripped-down version of [`curve-api`](https://github.com/curvefi/curve-api) for [`curve-lite`](https://github.com/curvefi/curve-lite) deployments
+A simpler, stripped-down version of [`curve-api`](https://github.com/curvefi/curve-api) for [`curve-core`](https://github.com/curvefi/curve-core) deployments
 
 # Documentation
 
-<https://api-lite.curve.fi/v1/documentation>
+<https://api-core.curve.fi/v1/documentation>
 
-OpenAPI specification: <https://api-lite.curve.fi/v1/openapi.json>
+OpenAPI specification: <https://api-core.curve.fi/v1/openapi.json>
 
 # Data
 

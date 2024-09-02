@@ -7,7 +7,7 @@ import Debug from 'debug';
 import http from 'http';
 import os from 'os';
 
-const debug = Debug('curve-api-lite:server');
+const debug = Debug('curve-api-core:server');
 const cpuCount = os.cpus().length;
 const workers = {};
 

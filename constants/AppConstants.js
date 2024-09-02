@@ -7,7 +7,7 @@ config({
 
 const IS_DEV = process.env.NODE_ENV !== 'production';
 
-const BASE_API_DOMAIN = IS_DEV ? 'http://localhost:3001' : 'https://api-lite.curve.fi';
+const BASE_API_DOMAIN = IS_DEV ? 'http://localhost:3001' : 'https://api-core.curve.fi';
 
 const REWARD_TOKENS_REPLACE_MAP = {
 };

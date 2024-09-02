@@ -90,7 +90,7 @@ const isDefinedCoin = (address) => address !== '0x000000000000000000000000000000
 
 /**
  * Params:
- * - blockchainId: any chain where Curve Lite is deployed
+ * - blockchainId: any chain where Curve Core is deployed
  * - registryId: 'factory-twocrypto' | 'factory-tricrypto' | 'factory-stable-ng
  */
 const getPools = async ({ blockchainId, registryId }) => {
