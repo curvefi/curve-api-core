@@ -3,7 +3,7 @@ import { lc } from '#root/utils/String.js';
 import YAML from 'yaml';
 
 const yamlConfigFilesUrls = {
-  sepolia: 'https://cdn.jsdelivr.net/gh/curvefi/curve-core/deployments/tutorial_arb_sepolia.yaml',
+  'arbitrum-sepolia': 'https://cdn.jsdelivr.net/gh/curvefi/curve-core/deployments/tutorial_arb_sepolia.yaml',
 };
 
 const configsPromise = Promise.all(Object.entries(yamlConfigFilesUrls).map(async ([networkId, configUrl]) => {
