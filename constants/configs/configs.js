@@ -39,3 +39,4 @@ const configsPromise = Promise.all(Object.entries(yamlConfigFilesUrls).map(async
 })).then((res) => arrayToHashmap(res));
 
 export default configsPromise;
+export { yamlConfigFilesUrls };
