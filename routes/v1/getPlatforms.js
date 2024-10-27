@@ -13,6 +13,7 @@
  */
 
 import { allBlockchainIds } from '#root/constants/configs/index.js';
+import configsPromise from '#root/constants/configs/configs.js';
 import { arrayToHashmap } from '#root/utils/Array.js';
 import { fn } from '#root/utils/api.js';
 import getPlatformRegistries from '#root/utils/data/curve-platform-registries.js';
@@ -22,6 +23,16 @@ export default fn(async () => ({
     blockchainId,
     (await getPlatformRegistries(blockchainId)).registryIds,
   ]))),
+  platformsMetadata: arrayToHashmap(await Promise.all((await allBlockchainIds).map(async (blockchainId) => {
+    const { rpcUrl, name, chainId, explorerBaseUrl } = (await configsPromise)[blockchainId];
+
+    return [blockchainId, {
+      rpcUrl,
+      name,
+      chainId,
+      explorerBaseUrl,
+    }];
+  }))),
 }), {
   maxAge: 60 * 60, // 1h
   cacheKey: 'getPlatforms',

@@ -1,4 +1,4 @@
-import configsPromise from './configs.js';
+import configsPromise from '#root/constants/configs/configs.js';
 
 const getConfigByRpcUrl = async (rpcUrl) => (
   Object.entries(await configsPromise).find(([, config]) => config.rpcUrl === rpcUrl)
