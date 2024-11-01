@@ -6,7 +6,7 @@ import Multicall from '#root/constants/abis/multicall.json' assert { type: 'json
 
 const ethereumWeb3Config = {
   web3: new Web3(`https://lb.drpc.org/ogrpc?network=ethereum&dkey=${process.env.DRPC_API_KEY}`),
-  multicall2Address: '0x5ba1e12693dc8f9c48aad8770482f4739beed696',
+  multicall2Address: '0xcA11bde05977b3631167028862bE2a173976CA11',
 };
 
 // Contract instances cache store
