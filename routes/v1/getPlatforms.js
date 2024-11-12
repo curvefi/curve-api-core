@@ -24,16 +24,17 @@ export default fn(async () => ({
     (await getPlatformRegistries(blockchainId)).registryIds,
   ]))),
   platformsMetadata: arrayToHashmap(await Promise.all((await allBlockchainIds).map(async (blockchainId) => {
-    const { rpcUrl, name, chainId, explorerBaseUrl } = (await configsPromise)[blockchainId];
+    const { rpcUrl, name, chainId, explorerBaseUrl, nativeCurrencySymbol } = (await configsPromise)[blockchainId];
 
     return [blockchainId, {
       rpcUrl,
       name,
       chainId,
       explorerBaseUrl,
+      nativeCurrencySymbol,
     }];
   }))),
 }), {
-  maxAge: 60 * 60, // 1h
+  maxAge: 30 * 60, // 30 min
   cacheKey: 'getPlatforms',
 });
