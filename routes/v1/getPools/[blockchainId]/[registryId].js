@@ -47,6 +47,7 @@ import { setTokenPrice, getTokenPrice } from '#root/utils/data/tokens-prices-sto
 import { IS_DEV } from '#root/constants/AppConstants.js';
 import { getAugmentedCoinsFirstPass } from '../_augmentedCoinsUtils.js';
 import toSpliced from 'core-js-pure/actual/array/to-spliced.js'; // For compat w/ Node 18
+import getFactoGaugesForPools from '#root/utils/data/getFactoGaugesForPools.js';
 
 /* eslint-disable */
 const POOL_BALANCE_ABI_UINT256 = [{ "gas": 1823, "inputs": [{ "name": "arg0", "type": "uint256" }], "name": "balances", "outputs": [{ "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }];
@@ -935,7 +936,20 @@ const getPools = async ({ blockchainId, registryId }) => {
     return augmentedPool;
   });
 
-  const augmentedData = augmentedDataPart2;
+  const gaugesData = await getFactoGaugesForPools(augmentedDataPart2, blockchainId);
+  const augmentedDataPart3 = augmentedDataPart2.map((poolData) => {
+    const gaugeData = gaugesData.find(({ poolAddress }) => poolAddress === poolData.address);
+
+    return {
+      ...poolData,
+      gaugeAddress: gaugeData.gaugeAddress,
+      lpTokenPrice: gaugeData.lpTokenPrice,
+      gaugeExtraRewards: gaugeData.extraRewards,
+      gaugeIsKilled: gaugeData.isKilled,
+    };
+  });
+
+  const augmentedData = augmentedDataPart3;
 
   return {
     poolData: augmentedData,

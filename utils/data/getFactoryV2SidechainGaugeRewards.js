@@ -32,7 +32,7 @@ export default memoize(async ({ blockchainId, gauges }) => {
 
   const gaugesData = await multiCall(flattenArray(sidechainOnlyFactoryGauges.map(({
     name,
-    gauge,
+    gaugeAddress: gauge,
     lpTokenPrice,
   }) => [{
     address: gauge,

@@ -1,26 +1,6 @@
-/**
- * @openapi
- * /getFactoGauges/{blockchainId}:
- *   get:
- *     tags:
- *       - Gauges
- *     description: |
- *       Returns information on all gauges on a specific chain
- *     parameters:
- *       - $ref: '#/components/parameters/blockchainId'
- *     responses:
- *       200:
- *         description:
- */
-
-/**
- * Note: this method is exposed as an API endpoint, but is mostly meant as an internal utility.
- */
-
 import Web3 from 'web3';
 import uniq from 'lodash.uniq';
 import { differenceInWeeks, fromUnixTime } from 'date-fns';
-import { NotFoundError, fn } from '#root/utils/api.js';
 import GAUGE_REGISTRY_ABI from '#root/constants/abis/gauge-registry.json' assert { type: 'json' };
 import GAUGE_REGISTRY_SIDECHAIN_ABI from '#root/constants/abis/gauge-registry-sidechain.json' assert { type: 'json' };
 import GAUGE_FACTORY_ABI from '#root/constants/abis/gauge-factory-sidechain.json' assert { type: 'json' };
@@ -31,27 +11,21 @@ import factorypool3Abi from '#root/constants/abis/factory_swap.json' assert { ty
 import { multiCall } from '#root/utils/Calls.js';
 import { lc } from '#root/utils/String.js';
 import { arrayToHashmap, arrayOfIncrements, flattenArray, removeNulls } from '#root/utils/Array.js';
-import getAllCurvePoolsData from '#root/utils/data/curve-pools-data.js';
 import configsPromise from '#root/constants/configs/index.js';
 import { getNowTimestamp } from '#root/utils/Date.js';
 import getFactoryV2SidechainGaugeRewards from '#root/utils/data/getFactoryV2SidechainGaugeRewards.js';
 import { sequentialPromiseFlatMap } from '#root/utils/Async.js';
 import { ethereumWeb3Config } from '#root/utils/Web3/web3.js';
+import memoize from 'memoizee';
 
-export default fn(async ({ blockchainId }) => {
-  if (blockchainId === 'ethereum') {
-    return {
-      gauges: [],
-    };
-  }
-
+const getFactoGaugesForPools = memoize(async (poolsData, blockchainId) => {
   const config = (await configsPromise)[blockchainId];
 
   if (typeof config === 'undefined') {
-    throw new NotFoundError(`No factory data for blockchainId "${blockchainId}"`);
+    throw new Error(`No factory data for blockchainId "${blockchainId}"`);
   }
   if (!config.chainId) {
-    throw new NotFoundError(`Missing chain id in config for "${blockchainId}"`);
+    throw new Error(`Missing chain id in config for "${blockchainId}"`);
   }
 
   const web3Side = new Web3(config.rpcUrl);
@@ -234,12 +208,8 @@ export default fn(async ({ blockchainId }) => {
       };
     });
 
-    const [allPools] = await Promise.all([
-      getAllCurvePoolsData([blockchainId]),
-    ]);
-
     const gaugesDataWithPoolAddressAndType = gaugesData.map((gaugeData) => {
-      const poolOrLendingVault = allPools.find(({ lpTokenAddress, address }) => (
+      const poolOrLendingVault = poolsData.find(({ lpTokenAddress, address }) => (
         lc(lpTokenAddress) === lc(gaugeData.lpTokenAddress) ||
         lc(address) === lc(gaugeData.lpTokenAddress)
       ));
@@ -256,11 +226,6 @@ export default fn(async ({ blockchainId }) => {
             poolOrLendingVault.usdTotal /
             (poolOrLendingVault.totalSupply / 1e18)
           ) : (poolOrLendingVault.vaultShares.pricePerShare)
-        ),
-        type: (
-          isPool ?
-            ((poolOrLendingVault.registryId === 'main' || poolOrLendingVault.registryId === 'factory') ? 'stable' : 'crypto') :
-            undefined
         ),
         registryId: poolOrLendingVault.registryId,
       };
@@ -292,7 +257,6 @@ export default fn(async ({ blockchainId }) => {
       gaugeFutureRelativeWeight,
       getGaugeWeight,
       poolAddress,
-      type,
       lpTokenPrice,
       poolVirtualPrice,
       isMirrored,
@@ -307,26 +271,18 @@ export default fn(async ({ blockchainId }) => {
       );
 
       return {
-        swap_token: lpTokenAddress,
-        gauge: address,
-        name,
-        symbol,
+        gaugeAddress: address,
         hasCrv,
-        side_chain: true,
-        type,
-        gauge_data: {
-          working_supply: workingSupply,
+        gaugeData: {
+          workingSupply,
           totalSupply,
-          gauge_relative_weight: gaugeRelativeWeight,
-          gauge_future_relative_weight: gaugeFutureRelativeWeight,
-          get_gauge_weight: getGaugeWeight,
-          inflation_rate: effectiveInflationRate,
-        },
-        swap_data: {
-          virtual_price: poolVirtualPrice,
+          gaugeRelativeWeight,
+          gaugeFutureRelativeWeight,
+          getGaugeWeight,
+          inflationRate: effectiveInflationRate,
         },
         lpTokenPrice,
-        swap: poolAddress,
+        poolAddress,
         rewardsNeedNudging,
         areCrvRewardsStuckInBridge: (
           effectiveInflationRate > 0 &&
@@ -339,17 +295,25 @@ export default fn(async ({ blockchainId }) => {
 
     const sideGaugesRewards = await getFactoryV2SidechainGaugeRewards({ blockchainId, gauges: formattedGaugesData });
 
-    return formattedGaugesData.map(({ gauge, ...rest }) => ({
-      gauge,
+    return formattedGaugesData.map(({ gaugeAddress, ...rest }) => ({
+      gaugeAddress,
       ...rest,
-      extraRewards: (sideGaugesRewards[gauge.toLowerCase()] || []),
+      extraRewards: (sideGaugesRewards[gaugeAddress.toLowerCase()] || []),
     }));
   });
 
-  return {
-    gauges,
-  };
+  return gauges;
 }, {
-  maxAge: 3 * 60,
-  cacheKey: ({ blockchainId }) => `getFactoGauges-${blockchainId}`,
+  maxAge: 1 * 60,
+  promise: true,
+  normalizer: ([
+    poolsData,
+    blockchainId,
+  ]) => {
+    const key = `${poolsData.map(({ address }) => address).join(',')}-${blockchainId}`;
+    console.log('key', key)
+    return key
+  },
 });
+
+export default getFactoGaugesForPools;
