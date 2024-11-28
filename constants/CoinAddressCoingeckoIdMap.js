@@ -9,6 +9,10 @@ const CoinAddressCoingeckoIdMap = {
   'arbitrum-sepolia': {
 
   },
+  'taiko': {
+    '0xc8F4518ed4bAB9a972808a493107926cE8237068': 'crvusd',
+    '0x07d83526730c7438048D55A4fc0b850e2aaB6f0b': 'usd-coin',
+  },
 };
 
 export default CoinAddressCoingeckoIdMap;
