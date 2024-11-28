@@ -942,10 +942,10 @@ const getPools = async ({ blockchainId, registryId }) => {
 
     return {
       ...poolData,
-      gaugeAddress: gaugeData.gaugeAddress,
-      lpTokenPrice: gaugeData.lpTokenPrice,
-      gaugeExtraRewards: gaugeData.extraRewards,
-      gaugeIsKilled: gaugeData.isKilled,
+      gaugeAddress: gaugeData?.gaugeAddress,
+      lpTokenPrice: gaugeData?.lpTokenPrice,
+      gaugeExtraRewards: gaugeData?.extraRewards,
+      gaugeIsKilled: gaugeData?.isKilled,
     };
   });
 
