@@ -17,6 +17,9 @@ const CoinAddressCoingeckoIdMap = {
     '0xc659b2633ed725e5346396a609d8f31794d6ac50': 'usd-coin',
     '0xaa24a5a5e273efaa64a960b28de6e27b87ffdffc': 'tether',
   },
+  'corn_maizenet': {
+    '0xEAEdD2B1b3F0fEC6388A4d6b2fE500B59Fd9f755': 'crvusd',
+  },
 };
 
 export default CoinAddressCoingeckoIdMap;

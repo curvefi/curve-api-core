@@ -35,6 +35,6 @@ export default fn(async () => ({
     }];
   }))),
 }), {
-  maxAge: 30 * 60, // 30 min
+  maxAge: 10 * 60,
   cacheKey: 'getPlatforms',
 });
