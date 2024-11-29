@@ -5,6 +5,7 @@ import YAML from 'yaml';
 const yamlConfigFilesUrls = {
   'arbitrum-sepolia': 'https://cdn.jsdelivr.net/gh/curvefi/curve-core/deployments/tutorial_arb_sepolia.yaml',
   'taiko': 'https://cdn.jsdelivr.net/gh/curvefi/curve-core/deployments/taiko.yaml',
+  'neondevnet': 'https://cdn.jsdelivr.net/gh/curvefi/curve-core/deployments/neondevnet.yaml',
 };
 
 const configsPromise = Promise.all(Object.entries(yamlConfigFilesUrls).map(async ([networkId, configUrl]) => {
