@@ -29,6 +29,6 @@ export default fn(async ({ blockchainId }) => {
 
   return yamlConfig;
 }, {
-  maxAge: 24 * 60 * 60,
+  maxAge: 10 * 60,
   cacheKey: ({ blockchainId }) => `getDeployment-${blockchainId}`,
 });
