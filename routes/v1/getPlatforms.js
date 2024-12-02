@@ -24,9 +24,10 @@ export default fn(async () => ({
     (await getPlatformRegistries(blockchainId)).registryIds,
   ]))),
   platformsMetadata: arrayToHashmap(await Promise.all((await allBlockchainIds).map(async (blockchainId) => {
-    const { rpcUrl, name, chainId, explorerBaseUrl, nativeCurrencySymbol } = (await configsPromise)[blockchainId];
+    const { isMainnet, rpcUrl, name, chainId, explorerBaseUrl, nativeCurrencySymbol } = (await configsPromise)[blockchainId];
 
     return [blockchainId, {
+      isMainnet,
       rpcUrl,
       name,
       chainId,

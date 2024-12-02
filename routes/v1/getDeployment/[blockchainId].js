@@ -18,7 +18,7 @@ import { fn, NotFoundError } from '#root/utils/api.js';
 import { yamlConfigFilesUrls } from '#root/constants/configs/configs.js';
 
 export default fn(async ({ blockchainId }) => {
-  const configFileUrl = yamlConfigFilesUrls[blockchainId];
+  const { url: configFileUrl } = yamlConfigFilesUrls[blockchainId] ?? {};
 
   if (typeof configFileUrl === 'undefined') {
     throw new NotFoundError(`No deployment data for blockchainId "${blockchainId}"`);
