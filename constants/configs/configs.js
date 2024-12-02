@@ -2,18 +2,39 @@ import { arrayToHashmap } from '#root/utils/Array.js';
 import { lc } from '#root/utils/String.js';
 import YAML from 'yaml';
 
+// Todo: automate retrieval of these entries from github repo
 const yamlConfigFilesUrls = {
-  'arbitrum-sepolia': 'https://cdn.jsdelivr.net/gh/curvefi/curve-core/deployments/tutorial_arb_sepolia.yaml',
-  'taiko': 'https://cdn.jsdelivr.net/gh/curvefi/curve-core/deployments/taiko.yaml',
-  'neondevnet': 'https://cdn.jsdelivr.net/gh/curvefi/curve-core/deployments/neondevnet.yaml',
-  'corn_maizenet': 'https://cdn.jsdelivr.net/gh/curvefi/curve-core/deployments/corn.yaml',
+  'arbitrum-sepolia': {
+    url: 'https://cdn.jsdelivr.net/gh/curvefi/curve-core/deployments/devnet/tutorial_arb_sepolia.yaml',
+    isMainnet: false,
+  },
+  'taiko': {
+    url: 'https://cdn.jsdelivr.net/gh/curvefi/curve-core/deployments/prod/taiko.yaml',
+    isMainnet: true,
+  },
+  'neondevnet': {
+    url: 'https://cdn.jsdelivr.net/gh/curvefi/curve-core/deployments/devnet/neondevnet.yaml',
+    isMainnet: false,
+  },
+  'corn_maizenet': {
+    url: 'https://cdn.jsdelivr.net/gh/curvefi/curve-core/deployments/prod/corn.yaml',
+    isMainnet: true,
+  },
+  'hyperliquid_devnet': {
+    url: 'https://cdn.jsdelivr.net/gh/curvefi/curve-core/deployments/devnet/hyperliquid_devnet.yaml',
+    isMainnet: false,
+  },
 };
 
-const configsPromise = Promise.all(Object.entries(yamlConfigFilesUrls).map(async ([networkId, configUrl]) => {
+const configsPromise = Promise.all(Object.entries(yamlConfigFilesUrls).map(async ([networkId, {
+  url: configUrl,
+  isMainnet,
+}]) => {
   const yamlFile = await (await fetch(configUrl)).text();
   const yamlConfig = YAML.parse(yamlFile);
 
   const config = {
+    isMainnet,
     hasNoMainRegistry: true, // No main registry deployed nor address provider
     poolsBaseUrlOld: null,
     poolsBaseUrl: `https://core.curve.fi/#/${networkId}/pools/`,
