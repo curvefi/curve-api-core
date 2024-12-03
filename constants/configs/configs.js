@@ -20,7 +20,7 @@ const yamlConfigFilesUrls = {
     url: 'https://cdn.jsdelivr.net/gh/curvefi/curve-core/deployments/prod/corn.yaml',
     isMainnet: true,
   },
-  'hyperliquid_devnet': {
+  'hyperliquid': {
     url: 'https://cdn.jsdelivr.net/gh/curvefi/curve-core/deployments/devnet/hyperliquid_devnet.yaml',
     isMainnet: false,
   },
