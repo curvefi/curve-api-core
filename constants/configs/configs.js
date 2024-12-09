@@ -16,7 +16,7 @@ const yamlConfigFilesUrls = {
     url: 'https://cdn.jsdelivr.net/gh/curvefi/curve-core/deployments/devnet/neondevnet.yaml',
     isMainnet: false,
   },
-  'corn_maizenet': {
+  'corn': {
     url: 'https://cdn.jsdelivr.net/gh/curvefi/curve-core/deployments/prod/corn.yaml',
     isMainnet: true,
   },
