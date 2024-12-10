@@ -40,7 +40,7 @@ import getCrvusdPrice from '#root/utils/data/getCrvusdPrice.js';
 import getETHLSTAPYs from '#root/utils/data/getETHLSTAPYs.js';
 import getDaiAPYs from '#root/utils/data/getDaiAPYs.js';
 import configsPromise from '#root/constants/configs/index.js';
-import COIN_ADDRESS_COINGECKO_ID_MAP from '#root/constants/CoinAddressCoingeckoIdMap.js';
+import CoinAddressCoingeckoIdMapPromise from '#root/constants/CoinAddressCoingeckoIdMap.js';
 import { getImplementation } from '#root/routes/v1/getPools/_utils.js';
 import { lc } from '#root/utils/String.js';
 import { setTokenPrice, getTokenPrice } from '#root/utils/data/tokens-prices-store.js';
@@ -100,6 +100,7 @@ const getPools = async ({ blockchainId, registryId }) => {
     throw new ParamError(`No config data for blockchainId "${blockchainId}"`);
   }
 
+  const COIN_ADDRESS_COINGECKO_ID_MAP = await CoinAddressCoingeckoIdMapPromise;
   const {
     nativeCurrencySymbol,
     rpcUrl,

@@ -14,6 +14,7 @@
     "#root/*.json": "./*.json"
   },
   "dependencies": {
+    "@octokit/rest": "^21.0.2",
     "bignumber.js": "^9.1.2",
     "body-parser": "^1.20.2",
     "core-js-pure": "^3.36.1",
@@ -24,6 +25,7 @@
     "express": "~4.18.2",
     "ioredis": "^5.3.2",
     "lodash.groupby": "^4.6.0",
+    "lodash.merge": "^4.6.2",
     "lodash.partition": "^4.6.0",
     "lodash.uniq": "^4.5.0",
     "lodash.uniqby": "^4.7.0",
