@@ -85,9 +85,9 @@ const configsPromise = (async () => {
         BASE_POOL_LP_TO_GAUGE_LP_MAP: new Map([]),
         DISABLED_POOLS_ADDRESSES: [].map(lc),
         referenceTokenAddresses: {
-          usdc: yamlConfig.config.reference_token_addresses?.usdc,
-          usdt: yamlConfig.config.reference_token_addresses?.usdt,
-          weth: yamlConfig.config.reference_token_addresses?.weth,
+          usdc: yamlConfig.config.reference_token_addresses?.usdc || undefined,
+          usdt: yamlConfig.config.reference_token_addresses?.usdt || undefined,
+          weth: yamlConfig.config.reference_token_addresses?.weth || undefined,
         },
       };
 
