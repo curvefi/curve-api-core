@@ -1,15 +1,16 @@
 import { arrayToHashmap } from '#root/utils/Array.js';
 import { lc } from '#root/utils/String.js';
 import YAML from 'yaml';
+import memoize from 'memoizee';
 import { Octokit } from '@octokit/rest';
 import { sequentialPromiseFlatMap, sequentialPromiseMap } from '#root/utils/Async.js';
 
-const configsPromise = (async () => {
-  const octokit = new Octokit({
-    auth: process.env.GITHUB_FINE_GRAINED_PERSONAL_ACCESS_TOKEN,
-    userAgent: process.env.GITHUB_API_UA,
-  });
+const octokit = new Octokit({
+  auth: process.env.GITHUB_FINE_GRAINED_PERSONAL_ACCESS_TOKEN,
+  userAgent: process.env.GITHUB_API_UA,
+});
 
+const getConfigs = memoize(async () => {
   const filePaths = await sequentialPromiseFlatMap(['prod', 'devnet'], async (folder) => (
     octokit.rest.repos.getContent({
       owner: 'curvefi',
@@ -73,6 +74,8 @@ const configsPromise = (async () => {
   )).then((res) => arrayToHashmap(res));
 
   return configs;
-})();
+}, {
+  maxAge: 10 * 60 * 1000,
+});
 
-export default configsPromise;
+export default getConfigs;

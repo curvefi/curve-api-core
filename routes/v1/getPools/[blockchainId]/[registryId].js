@@ -39,8 +39,8 @@ import getTokensPrices from '#root/utils/data/tokens-prices.js';
 import getCrvusdPrice from '#root/utils/data/getCrvusdPrice.js';
 import getETHLSTAPYs from '#root/utils/data/getETHLSTAPYs.js';
 import getDaiAPYs from '#root/utils/data/getDaiAPYs.js';
-import configsPromise from '#root/constants/configs/index.js';
-import CoinAddressCoingeckoIdMapPromise from '#root/constants/CoinAddressCoingeckoIdMap.js';
+import getConfigs from '#root/constants/configs/index.js';
+import getCoinAddressCoingeckoIdMap from '#root/constants/CoinAddressCoingeckoIdMap.js';
 import { getImplementation } from '#root/routes/v1/getPools/_utils.js';
 import { lc } from '#root/utils/String.js';
 import { setTokenPrice, getTokenPrice } from '#root/utils/data/tokens-prices-store.js';
@@ -95,12 +95,12 @@ const isDefinedCoin = (address) => address !== '0x000000000000000000000000000000
  * - registryId: 'factory-twocrypto' | 'factory-tricrypto' | 'factory-stable-ng
  */
 const getPools = async ({ blockchainId, registryId }) => {
-  const config = (await configsPromise)[blockchainId];
+  const config = (await getConfigs())[blockchainId];
   if (typeof config === 'undefined') {
     throw new ParamError(`No config data for blockchainId "${blockchainId}"`);
   }
 
-  const COIN_ADDRESS_COINGECKO_ID_MAP = await CoinAddressCoingeckoIdMapPromise;
+  const COIN_ADDRESS_COINGECKO_ID_MAP = await getCoinAddressCoingeckoIdMap();
   const {
     nativeCurrencySymbol,
     rpcUrl,

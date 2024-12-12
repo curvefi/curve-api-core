@@ -1,9 +1,9 @@
 import memoize from 'memoizee';
-import configsPromise from '#root/constants/configs/index.js';
+import getConfigs from '#root/constants/configs/index.js';
 import { ZERO_ADDRESS } from '#root/utils/Web3/index.js';
 
 const getPlatformRegistries = memoize(async (blockchainId) => {
-  const config = (await configsPromise)[blockchainId];
+  const config = (await getConfigs())[blockchainId];
   if (typeof config === 'undefined') {
     throw new Error(`No config data for blockchainId "${blockchainId}"`);
   }

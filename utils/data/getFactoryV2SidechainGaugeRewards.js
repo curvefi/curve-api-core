@@ -7,19 +7,19 @@ import { flattenArray, uniq, arrayToHashmap } from '#root/utils/Array.js';
 import { getNowTimestamp } from '#root/utils/Date.js';
 import getTokensPrices from '#root/utils/data/tokens-prices.js';
 import getAssetsPrices from '#root/utils/data/assets-prices.js';
-import configsPromise from '#root/constants/configs/index.js'
+import getConfigs from '#root/constants/configs/index.js'
 import ERC20_ABI from '#root/constants/abis/erc20.json' assert { type: 'json' };
 import SIDECHAIN_FACTO_GAUGE_ABI from '#root/constants/abis/sidechain-gauge.json' assert { type: 'json' };
-import CoinAddressCoingeckoIdMapPromise from '#root/constants/CoinAddressCoingeckoIdMap.js';
+import getCoinAddressCoingeckoIdMap from '#root/constants/CoinAddressCoingeckoIdMap.js';
 import { getTokenPrice } from '#root/utils/data/tokens-prices-store.js';
 
 export default memoize(async ({ blockchainId, gauges }) => {
-  const config = (await configsPromise)[blockchainId];
+  const config = (await getConfigs())[blockchainId];
   if (typeof config === 'undefined') {
     throw new Error(`No factory data for blockchainId "${blockchainId}"`);
   }
 
-  const COIN_ADDRESS_COINGECKO_ID_MAP = await CoinAddressCoingeckoIdMapPromise;
+  const COIN_ADDRESS_COINGECKO_ID_MAP = await getCoinAddressCoingeckoIdMap();
   const multicallNetworkSettings = {
     web3: new Web3(config.rpcUrl),
     multicall2Address: config.multicall2Address,

@@ -5,9 +5,10 @@
  *    themselves and the price that assets are trading at in them
  */
 
-import configsPromise from '#root/constants/configs/index.js'
+import getConfigs from '#root/constants/configs/index.js'
 import { arrayToHashmap } from '#root/utils/Array.js';
 import merge from 'lodash.merge';
+import memoize from 'memoizee';
 
 // For deployments before yaml configs started exposing these properties
 // Can also be used to fill in some blanks if needed (if the set of initial
@@ -30,8 +31,8 @@ const HARDCODED_DATA = {
   },
 };
 
-const CoinAddressCoingeckoIdMapPromise = new Promise(async (resolve) => {
-  const configs = await configsPromise;
+const getCoinAddressCoingeckoIdMap = memoize(async () => {
+  const configs = await getConfigs();
 
   const configData = arrayToHashmap(Object.entries(configs).map(([networkId, { referenceTokenAddresses }]) => [
     networkId,
@@ -42,8 +43,9 @@ const CoinAddressCoingeckoIdMapPromise = new Promise(async (resolve) => {
     )),
   ]));
 
-  const mergedData = merge(configData, HARDCODED_DATA);
-  resolve(mergedData);
+  return merge(configData, HARDCODED_DATA);
+}, {
+  maxAge: 1 * 60 * 1000,
 });
 
-export default CoinAddressCoingeckoIdMapPromise;
+export default getCoinAddressCoingeckoIdMap;

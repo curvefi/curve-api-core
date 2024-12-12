@@ -11,7 +11,7 @@ import factorypool3Abi from '#root/constants/abis/factory_swap.json' assert { ty
 import { multiCall } from '#root/utils/Calls.js';
 import { lc } from '#root/utils/String.js';
 import { arrayToHashmap, arrayOfIncrements, flattenArray, removeNulls } from '#root/utils/Array.js';
-import configsPromise from '#root/constants/configs/index.js';
+import getConfigs from '#root/constants/configs/index.js';
 import { getNowTimestamp } from '#root/utils/Date.js';
 import getFactoryV2SidechainGaugeRewards from '#root/utils/data/getFactoryV2SidechainGaugeRewards.js';
 import { sequentialPromiseFlatMap } from '#root/utils/Async.js';
@@ -19,7 +19,7 @@ import { ethereumWeb3Config } from '#root/utils/Web3/web3.js';
 import memoize from 'memoizee';
 
 const getFactoGaugesForPools = memoize(async (poolsData, blockchainId) => {
-  const config = (await configsPromise)[blockchainId];
+  const config = (await getConfigs())[blockchainId];
 
   if (typeof config === 'undefined') {
     throw new Error(`No factory data for blockchainId "${blockchainId}"`);
@@ -311,7 +311,7 @@ const getFactoGaugesForPools = memoize(async (poolsData, blockchainId) => {
     blockchainId,
   ]) => {
     const key = `${poolsData.map(({ address }) => address).join(',')}-${blockchainId}`;
-    console.log('key', key)
+    // console.log('key', key)
     return key
   },
 });
