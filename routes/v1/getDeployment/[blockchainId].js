@@ -13,21 +13,16 @@
  *         description:
  */
 
-import YAML from 'yaml';
 import { fn, NotFoundError } from '#root/utils/api.js';
-import { yamlConfigFilesUrls } from '#root/constants/configs/configs.js';
+import configsPromise from '#root/constants/configs/configs.js';
 
 export default fn(async ({ blockchainId }) => {
-  const { url: configFileUrl } = yamlConfigFilesUrls[blockchainId] ?? {};
-
-  if (typeof configFileUrl === 'undefined') {
+  const config = (await configsPromise)[blockchainId];
+  if (typeof config === 'undefined') {
     throw new NotFoundError(`No deployment data for blockchainId "${blockchainId}"`);
   }
 
-  const yamlFile = await (await fetch(configFileUrl)).text();
-  const yamlConfig = YAML.parse(yamlFile);
-
-  return yamlConfig;
+  return config.rawYamlConfig;
 }, {
   maxAge: 10 * 60,
   cacheKey: ({ blockchainId }) => `getDeployment-${blockchainId}`,

@@ -17,12 +17,7 @@ OpenAPI specification: <https://api-core.curve.fi/v1/openapi.json>
 ## Adding new chains (aka new curve-core deployments)
 
 Each new curve-core deployment will lead to a new yaml deployment output file being added in this folder: https://github.com/curvefi/curve-core/tree/main/deployments
-
-To add this new deployment to curve-api-core:
-
-1. In `constants/configs/configs.js`, add the new deployment file url to the `yamlConfigFilesUrls` object. The key must be the chain id, which must uniquely identify the chain across `curve-api-core`, `curve-js` and `curve-frontend`.
-2. Test the new API endpoints for this chain id in your local environment: `npm run start` and hit those new endpoints in your browser
-3. If everything behaves as expected, commit those changes, and open a new PR with them. They'll be reviewed, then merged.
+These are automatically retrieved and served by this API.
 
 ## Deployment
 

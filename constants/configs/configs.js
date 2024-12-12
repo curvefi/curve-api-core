@@ -4,30 +4,6 @@ import YAML from 'yaml';
 import { Octokit } from '@octokit/rest';
 import { sequentialPromiseFlatMap, sequentialPromiseMap } from '#root/utils/Async.js';
 
-// Todo: automate retrieval of these entries from github repo
-const yamlConfigFilesUrls = {
-  'arbitrum-sepolia': {
-    url: 'https://cdn.jsdelivr.net/gh/curvefi/curve-core/deployments/devnet/tutorial_arb_sepolia.yaml',
-    isMainnet: false,
-  },
-  'taiko': {
-    url: 'https://cdn.jsdelivr.net/gh/curvefi/curve-core/deployments/prod/taiko.yaml',
-    isMainnet: true,
-  },
-  'neondevnet': {
-    url: 'https://cdn.jsdelivr.net/gh/curvefi/curve-core/deployments/devnet/neondevnet.yaml',
-    isMainnet: false,
-  },
-  'corn_maizenet': {
-    url: 'https://cdn.jsdelivr.net/gh/curvefi/curve-core/deployments/prod/corn.yaml',
-    isMainnet: true,
-  },
-  'hyperliquid': {
-    url: 'https://cdn.jsdelivr.net/gh/curvefi/curve-core/deployments/devnet/hyperliquid_devnet.yaml',
-    isMainnet: false,
-  },
-};
-
 const configsPromise = (async () => {
   const octokit = new Octokit({
     auth: process.env.GITHUB_FINE_GRAINED_PERSONAL_ACCESS_TOKEN,
@@ -89,6 +65,7 @@ const configsPromise = (async () => {
           usdt: yamlConfig.config.reference_token_addresses?.usdt || undefined,
           weth: yamlConfig.config.reference_token_addresses?.weth || undefined,
         },
+        rawYamlConfig: yamlConfig,
       };
 
       return [networkId, config];
@@ -99,4 +76,3 @@ const configsPromise = (async () => {
 })();
 
 export default configsPromise;
-export { yamlConfigFilesUrls };
