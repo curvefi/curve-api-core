@@ -37,7 +37,12 @@ const setTokenPrice = ({ blockchainId, address, price, poolAddress, poolUsdTotal
     PRICES_CACHE[blockchainId] = {};
   }
 
-  const existingTokenPriceData = getTokenPrice(address, blockchainId, true) ?? {};
+  let {
+    matchedTokenPriceData: existingTokenPriceData,
+    entireTokenPriceData,
+  } = getTokenPrice(address, blockchainId, true) ?? {};
+  existingTokenPriceData = existingTokenPriceData ?? {};
+  entireTokenPriceData = entireTokenPriceData ?? {};
 
   // 0 and 1 are special values for poolUsdTotal that represent inexactitude
   const isNewDataLessPreciseThanExisting = (
@@ -58,7 +63,7 @@ const setTokenPrice = ({ blockchainId, address, price, poolAddress, poolUsdTotal
   if (isSameData) return;
 
   PRICES_CACHE[blockchainId][lc(address)] = {
-    ...existingTokenPriceData,
+    ...entireTokenPriceData,
     [lc(poolAddress)]: {
       price,
       poolUsdTotal,
@@ -70,14 +75,15 @@ const setTokenPrice = ({ blockchainId, address, price, poolAddress, poolUsdTotal
 const getTokenPrice = (address, blockchainId, returnEntireObject = false) => {
   const tokenPriceData = PRICES_CACHE[blockchainId]?.[lc(address)] ?? {};
 
-  const matchedTokenPriceData = Object.values(tokenPriceData).sort(({ poolUsdTotal: poolUsdTotalA }, { poolUsdTotal: poolUsdTotalB }) => (
+  const entireTokenPriceData = Object.values(tokenPriceData).sort(({ poolUsdTotal: poolUsdTotalA }, { poolUsdTotal: poolUsdTotalB }) => (
     poolUsdTotalA > poolUsdTotalB ? -1 :
       poolUsdTotalA < poolUsdTotalB ? 1 : 0
-  ))?.[0];
+  ));
+  const matchedTokenPriceData = entireTokenPriceData?.[0];
 
   const isStale = (matchedTokenPriceData?.ts ?? 0) + PRICE_TIME_TO_STALE < getNowTimestamp();
   if (isStale) return undefined;
-  if (returnEntireObject) return matchedTokenPriceData;
+  if (returnEntireObject) return { entireTokenPriceData, matchedTokenPriceData };
 
   return matchedTokenPriceData.price;
 };
