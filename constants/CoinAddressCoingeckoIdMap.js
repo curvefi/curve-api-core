@@ -39,7 +39,13 @@ const getCoinAddressCoingeckoIdMap = memoize(async () => {
     arrayToHashmap((
       Object.entries(referenceTokenAddresses)
         .filter(([tokenId, tokenAddress]) => !!tokenAddress) // Filter out undefineds
-        .map(([tokenId, tokenAddress]) => [tokenAddress, tokenId])
+        // Map config coin ids to coingecko ids
+        .map(([tokenId, tokenAddress]) => [tokenAddress, (
+          tokenId === 'usdc' ? 'usd-coin' :
+            tokenId === 'usdt' ? 'tether' :
+              tokenId === 'weth' ? 'ethereum' :
+                null
+        )])
     )),
   ]));
 
