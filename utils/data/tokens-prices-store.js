@@ -30,7 +30,7 @@ import { getNowTimestamp } from '#root/utils/Date.js';
 
 let PRICES_CACHE = {};
 const REDIS_CACHE_KEY = 'tokens-prices-store';
-const PRICE_TIME_TO_STALE = 5 * 60;
+const PRICE_TIME_TO_STALE = 6 * 60;
 
 const setTokenPrice = ({ blockchainId, address, price, poolAddress, poolUsdTotal }) => {
   if (typeof PRICES_CACHE[blockchainId] === 'undefined') {
