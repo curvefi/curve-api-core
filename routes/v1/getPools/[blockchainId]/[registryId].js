@@ -65,7 +65,7 @@ const ORACLIZED_POOL_DETECTION_ABI = [{ "stateMutability": "view", "type": "func
 /* eslint-enable */
 /* eslint-disable object-curly-newline, camelcase */
 
-const MAX_AGE = 5 * 60;
+const MAX_AGE = 3 * 60;
 
 const IGNORED_COINS = {};
 
