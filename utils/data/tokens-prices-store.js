@@ -30,7 +30,7 @@ import { getNowTimestamp } from '#root/utils/Date.js';
 
 let PRICES_CACHE = {};
 const REDIS_CACHE_KEY = 'tokens-prices-store';
-const PRICE_TIME_TO_STALE = 6 * 60;
+const PRICE_TIME_TO_STALE = 5 * 60;
 
 const setTokenPrice = ({ blockchainId, address, price, poolAddress, poolUsdTotal }) => {
   if (typeof PRICES_CACHE[blockchainId] === 'undefined') {
@@ -72,16 +72,45 @@ const setTokenPrice = ({ blockchainId, address, price, poolAddress, poolUsdTotal
   };
 };
 
-const getTokenPrice = (address, blockchainId, returnEntireObject = false) => {
+// Returns entire token price data + stale information
+const getRawTokenPrice = (address, blockchainId) => {
   const tokenPriceData = PRICES_CACHE[blockchainId]?.[lc(address)] ?? {};
 
-  const entireTokenPriceData = Object.values(tokenPriceData).sort(({ poolUsdTotal: poolUsdTotalA }, { poolUsdTotal: poolUsdTotalB }) => (
-    poolUsdTotalA > poolUsdTotalB ? -1 :
-      poolUsdTotalA < poolUsdTotalB ? 1 : 0
-  ));
-  const matchedTokenPriceData = entireTokenPriceData?.[0];
+  const isNotStale = ({ ts }) => (
+    (ts ?? 0) + PRICE_TIME_TO_STALE >= getNowTimestamp()
+  );
+  const hasNonStaleValue = Object.values(tokenPriceData).some(isNotStale)
 
+  const entireTokenPriceData = (
+    (hasNonStaleValue ? Object.values(tokenPriceData).filter(isNotStale) : Object.values(tokenPriceData)).sort(({ poolUsdTotal: poolUsdTotalA }, { poolUsdTotal: poolUsdTotalB }) => (
+      poolUsdTotalA > poolUsdTotalB ? -1 :
+        poolUsdTotalA < poolUsdTotalB ? 1 : 0
+    ))
+  );
+  const matchedTokenPriceData = entireTokenPriceData?.[0];
   const isStale = (matchedTokenPriceData?.ts ?? 0) + PRICE_TIME_TO_STALE < getNowTimestamp();
+
+  // console.log({
+  //   entireTokenPriceData,
+  //   matchedTokenPriceData,
+  //   isStale,
+  // })
+
+  return {
+    entireTokenPriceData,
+    matchedTokenPriceData,
+    isStale,
+  };
+};
+
+// Returns token price data if not stale
+const getTokenPrice = (address, blockchainId, returnEntireObject = false) => {
+  const {
+    entireTokenPriceData,
+    matchedTokenPriceData,
+    isStale,
+  } = getRawTokenPrice(address, blockchainId);
+
   if (isStale) return undefined;
   if (returnEntireObject) return { entireTokenPriceData, matchedTokenPriceData };
 
@@ -106,4 +135,5 @@ setInterval(() => {
 export {
   setTokenPrice,
   getTokenPrice,
+  getRawTokenPrice,
 };

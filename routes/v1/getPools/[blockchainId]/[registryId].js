@@ -65,7 +65,7 @@ const ORACLIZED_POOL_DETECTION_ABI = [{ "stateMutability": "view", "type": "func
 /* eslint-enable */
 /* eslint-disable object-curly-newline, camelcase */
 
-const MAX_AGE = 3 * 60;
+const MAX_AGE = 5 * 60;
 
 const IGNORED_COINS = {};
 
@@ -651,7 +651,7 @@ const getPools = async ({ blockchainId, registryId }) => {
         (
           crvusdTokenAddresseAndPriceMapFallback[coinAddress.toLowerCase()] ||
           coinAddressesAndPricesMapFallback[coinAddress.toLowerCase()] ||
-          (getTokenPrice(coinAddress, blockchainId) ?? null) ||
+          // (getTokenPrice(coinAddress, blockchainId) ?? null) ||
           null
         )
     );
@@ -786,8 +786,18 @@ const getPools = async ({ blockchainId, registryId }) => {
       internalPoolsPrices,
     });
 
+    // Won't necessarily be the final figure, but necessary for the second
+    // pass of coins prices derivation to know which reference prices to consider
+    const usdTotal = (
+      (BROKEN_POOLS_ADDRESSES || []).includes(lc(poolInfo.address)) ? 0 :
+        sum(augmentedCoins.map(({ usdPrice, poolBalance, decimals }) => (
+          poolBalance / (10 ** decimals) * usdPrice
+        )))
+    );
+
     return {
       ...poolInfo,
+      usdTotal,
       implementation,
       assetTypeName,
       coins: augmentedCoins,
@@ -795,7 +805,15 @@ const getPools = async ({ blockchainId, registryId }) => {
   });
 
   const augmentedDataPart2 = await sequentialPromiseReduce(augmentedDataPart1, async (poolInfo, i, wipMergedPoolData) => {
-    const augmentedCoins = poolInfo.coins;
+    // Second pass
+    const augmentedCoins = await getAugmentedCoinsFirstPass({
+      poolInfo,
+      mergedCoinData,
+      blockchainId,
+      registryId,
+      wipMergedPoolData: augmentedDataPart1, // Pass previously-augmented data for `otherPools`
+      internalPoolsPrices,
+    });
 
     const usdTotal = (
       (BROKEN_POOLS_ADDRESSES || []).includes(lc(poolInfo.address)) ? 0 :
@@ -922,8 +940,9 @@ const getPools = async ({ blockchainId, registryId }) => {
     augmentedPool.coins.forEach(({
       usdPrice,
       address,
+      ignoredByStore = false,
     }) => {
-      if (usdPrice !== null) {
+      if (usdPrice !== null && !ignoredByStore) {
         setTokenPrice({
           blockchainId,
           address,

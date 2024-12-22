@@ -1,6 +1,7 @@
 import { flattenArray, arrayToHashmap } from '#root/utils/Array.js';
+import { getRawTokenPrice, setTokenPrice } from '#root/utils/data/tokens-prices-store.js';
 
-const LOG_DEBUG = false;
+const LOG_DEBUG = true;
 
 const getImplementation = ({
   registryId,
@@ -15,7 +16,32 @@ const getImplementation = ({
 
 // Can be increased if needed, "3" is currently the max we've needed based on situations
 // where coins were missing prices that we've encountered so far.
-const MAX_PASSES = 4;
+const MAX_PASSES = 10;
+
+const saveJustDerivedTokenPrices = ({
+  coins,
+  poolInfo,
+  blockchainId,
+}) => (
+  coins.forEach(({
+    usdPrice,
+    address,
+  }) => {
+    if (usdPrice !== null) {
+      // We don’t know the pool’s usdTotal at this point yet, so instead use a number
+      // that represents whether this empty or not to give some very rough precedence.
+      const dumbPoolUsdTotal = Number(poolInfo.totalSupply) === 0 ? 0 : 1;
+
+      setTokenPrice({
+        blockchainId,
+        address,
+        price: usdPrice,
+        poolAddress: poolInfo.address,
+        poolUsdTotal: dumbPoolUsdTotal,
+      });
+    }
+  })
+);
 
 /**
  * Tries to derive missing coin prices from other available data using different methods.
@@ -44,7 +70,7 @@ const deriveMissingCoinPricesSinglePass = async ({
   if (canUsePriceOracle) {
     if (LOG_DEBUG) console.log('Missing coin price: using method 1.a to derive price', poolInfo.id);
 
-    return (
+    const augmentedCoins = (
       coins.map((coin, i) => (
         coin.usdPrice === null ? {
           ...coin,
@@ -56,6 +82,14 @@ const deriveMissingCoinPricesSinglePass = async ({
         } : coin
       ))
     );
+
+    saveJustDerivedTokenPrices({
+      blockchainId,
+      coins: augmentedCoins,
+      poolInfo,
+    });
+
+    return augmentedCoins;
   }
 
   /**
@@ -76,7 +110,7 @@ const deriveMissingCoinPricesSinglePass = async ({
   if (canUsePriceOracles) {
     if (LOG_DEBUG) console.log('Missing coin price: using method 1.b to derive price', poolInfo.id);
 
-    return (
+    const augmentedCoins = (
       coins.map((coin, i) => (
         coin.usdPrice === null ? {
           ...coin,
@@ -84,6 +118,14 @@ const deriveMissingCoinPricesSinglePass = async ({
         } : coin
       ))
     );
+
+    saveJustDerivedTokenPrices({
+      blockchainId,
+      coins: augmentedCoins,
+      poolInfo,
+    });
+
+    return augmentedCoins;
   }
 
   /**
@@ -109,10 +151,12 @@ const deriveMissingCoinPricesSinglePass = async ({
     otherPoolsCoinsAddressesAndPricesMap[address]
   ));
 
+  console.log('YO', poolInfo.id, canUseSameCoinPriceInOtherPool, coins.map(({ address }) => address), otherPoolsCoinsAddressesAndPricesMap)
+
   if (canUseSameCoinPriceInOtherPool) {
     if (LOG_DEBUG) console.log('Missing coin price: using method 2 to derive price', poolInfo.id);
 
-    return (
+    const augmentedCoins = (
       coins.map((coin) => (
         coin.usdPrice === null ? {
           ...coin,
@@ -120,6 +164,14 @@ const deriveMissingCoinPricesSinglePass = async ({
         } : coin
       ))
     );
+
+    saveJustDerivedTokenPrices({
+      blockchainId,
+      coins: augmentedCoins,
+      poolInfo,
+    });
+
+    return augmentedCoins;
   }
 
   /**
@@ -137,7 +189,7 @@ const deriveMissingCoinPricesSinglePass = async ({
     const coinWithKnownPrice = coins.find(({ usdPrice }) => usdPrice !== null);
     const coinWithKnownPriceIndex = coins.indexOf(coinWithKnownPrice);
 
-    return (
+    const augmentedCoins = (
       coins.map((coin, coinIndex) => {
         if (coin.usdPrice !== null) return coin;
 
@@ -160,6 +212,14 @@ const deriveMissingCoinPricesSinglePass = async ({
         };
       })
     );
+
+    saveJustDerivedTokenPrices({
+      blockchainId,
+      coins: augmentedCoins,
+      poolInfo,
+    });
+
+    return augmentedCoins;
   }
 
   return coins;

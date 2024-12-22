@@ -28,7 +28,6 @@ const HARDCODED_DATA = {
   },
   'corn': {
     '0xEAEdD2B1b3F0fEC6388A4d6b2fE500B59Fd9f755': 'crvusd',
-    '0xecAc9C5F704e954931349Da37F60E39f515c11c1': 'lombard-staked-btc',
   },
 };
 
