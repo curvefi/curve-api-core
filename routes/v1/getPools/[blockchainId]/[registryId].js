@@ -43,7 +43,7 @@ import getConfigs from '#root/constants/configs/index.js';
 import getCoinAddressCoingeckoIdMap from '#root/constants/CoinAddressCoingeckoIdMap.js';
 import { getImplementation } from '#root/routes/v1/getPools/_utils.js';
 import { lc } from '#root/utils/String.js';
-import { setTokenPrice, getTokenPrice } from '#root/utils/data/tokens-prices-store.js';
+import { setTokenPrice, getTokenPrice, getRawTokenPrice } from '#root/utils/data/tokens-prices-store.js';
 import { IS_DEV } from '#root/constants/AppConstants.js';
 import { getAugmentedCoinsFirstPass } from '../_augmentedCoinsUtils.js';
 import toSpliced from 'core-js-pure/actual/array/to-spliced.js'; // For compat w/ Node 18
@@ -646,12 +646,34 @@ const getPools = async ({ blockchainId, registryId }) => {
     const key = `${getIdForPool(poolId)}-${coinAddress}`;
     const coinInfo = accu[key];
 
+    // Try allowing using token price from the price store only when the price
+    // cannot be derived from this registry's own info
+    const isCoinAbsentFromRegistryOtherPools = !allCoinAddresses.some((coinData) => (
+      lc(coinData.address) === lc(coinAddress) &&
+      coinData.poolId !== poolId
+    ));
+    const isCoinPairedWithRef = allCoinAddresses.some((coinData) => {
+      if (lc(coinData.address) === lc(coinAddress)) {
+        const poolIdWithCoin = coinData.poolId;
+        const poolOtherCoinAddresses = allCoinAddresses.filter(({ poolId: iteratedPoolId }) => iteratedPoolId === poolIdWithCoin).filter((coinData) => lc(coinData.address) !== lc(coinAddress)).map((coinData) => lc(coinData.address));
+        const containsRefCoins = Object.keys(COIN_ADDRESS_COINGECKO_ID_MAP[blockchainId] ?? {}).map(lc).some((refCoinAddress) => poolOtherCoinAddresses.includes(refCoinAddress));
+
+        if (containsRefCoins) return true;
+      }
+
+      return false;
+    });
+    const canUseTokenPriceStore = (
+      isCoinAbsentFromRegistryOtherPools ||
+      !isCoinPairedWithRef
+    );
+
     const coinPrice = (
       (IGNORED_COINS[blockchainId] || []).includes(coinAddress.toLowerCase()) ? 0 :
         (
           crvusdTokenAddresseAndPriceMapFallback[coinAddress.toLowerCase()] ||
           coinAddressesAndPricesMapFallback[coinAddress.toLowerCase()] ||
-          // (getTokenPrice(coinAddress, blockchainId) ?? null) ||
+          (canUseTokenPriceStore ? (getTokenPrice(coinAddress, blockchainId) ?? null) : null) ||
           null
         )
     );
@@ -719,7 +741,11 @@ const getPools = async ({ blockchainId, registryId }) => {
       });
       const isUsdMetaPool = implementation.startsWith('metausd') || implementation.startsWith('v1metausd');
 
-      const SMALL_AMOUNT_UNIT = BN(isUsdMetaPool ? 10000 : 1);
+      const SMALL_AMOUNT_UNIT = BN(
+        isUsdMetaPool ? 10000 :
+          (blockchainId === 'corn') ? 0.1 :
+            1
+      );
       if (Number(totalSupply) < SMALL_AMOUNT_UNIT.times(1e18)) return []; // Ignore empty pools
 
       const coinsAddresses = unfilteredCoinsAddresses.filter(isDefinedCoin);

@@ -1,7 +1,7 @@
 import { flattenArray, arrayToHashmap } from '#root/utils/Array.js';
 import { getRawTokenPrice, setTokenPrice } from '#root/utils/data/tokens-prices-store.js';
 
-const LOG_DEBUG = true;
+const LOG_DEBUG = false;
 
 const getImplementation = ({
   registryId,
@@ -150,8 +150,6 @@ const deriveMissingCoinPricesSinglePass = async ({
     usdPrice === null &&
     otherPoolsCoinsAddressesAndPricesMap[address]
   ));
-
-  console.log('YO', poolInfo.id, canUseSameCoinPriceInOtherPool, coins.map(({ address }) => address), otherPoolsCoinsAddressesAndPricesMap)
 
   if (canUseSameCoinPriceInOtherPool) {
     if (LOG_DEBUG) console.log('Missing coin price: using method 2 to derive price', poolInfo.id);
