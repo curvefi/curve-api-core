@@ -30,7 +30,7 @@ import { getNowTimestamp } from '#root/utils/Date.js';
 
 let PRICES_CACHE = {};
 const REDIS_CACHE_KEY = 'tokens-prices-store';
-const PRICE_TIME_TO_STALE = 15 * 60;
+const PRICE_TIME_TO_STALE = 5 * 60;
 
 const setTokenPrice = ({ blockchainId, address, price, poolAddress, poolUsdTotal }) => {
   if (typeof PRICES_CACHE[blockchainId] === 'undefined') {
@@ -117,6 +117,30 @@ const getTokenPrice = (address, blockchainId, returnEntireObject = false) => {
   return matchedTokenPriceData.price;
 };
 
+// Returns token price data with the closest ts (regardless of staleness)
+const getLatestTokenPrice = (address, blockchainId) => {
+  const tokenPriceData = PRICES_CACHE[blockchainId]?.[lc(address)] ?? {};
+
+  const entireTokenPriceData = (
+    Object.values(tokenPriceData).sort(({ ts: tsA }, { ts: tsB }) => (
+      tsA > tsB ? -1 :
+        tsA < tsB ? 1 : 0
+    ))
+  );
+  if (entireTokenPriceData.length === 0) return undefined;
+
+  const latestTs = entireTokenPriceData[0].ts;
+  const latestPriceData = entireTokenPriceData.filter(({ ts }) => ts === latestTs);
+  const sortedLatestPriceData = (
+    latestPriceData.sort(({ poolUsdTotal: poolUsdTotalA }, { poolUsdTotal: poolUsdTotalB }) => (
+      poolUsdTotalA > poolUsdTotalB ? -1 :
+        poolUsdTotalA < poolUsdTotalB ? 1 : 0
+    ))
+  );
+
+  return sortedLatestPriceData[0].price;
+};
+
 setTimeout(async () => {
   const remotePriceCache = await storage.getItem(REDIS_CACHE_KEY);
   if (remotePriceCache !== null) PRICES_CACHE = JSON.parse(remotePriceCache);
@@ -136,4 +160,5 @@ export {
   setTokenPrice,
   getTokenPrice,
   getRawTokenPrice,
+  getLatestTokenPrice,
 };

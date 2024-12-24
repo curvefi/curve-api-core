@@ -43,7 +43,7 @@ import getConfigs from '#root/constants/configs/index.js';
 import getCoinAddressCoingeckoIdMap from '#root/constants/CoinAddressCoingeckoIdMap.js';
 import { getImplementation } from '#root/routes/v1/getPools/_utils.js';
 import { lc } from '#root/utils/String.js';
-import { setTokenPrice, getTokenPrice, getRawTokenPrice } from '#root/utils/data/tokens-prices-store.js';
+import { setTokenPrice, getLatestTokenPrice } from '#root/utils/data/tokens-prices-store.js';
 import { IS_DEV } from '#root/constants/AppConstants.js';
 import { getAugmentedCoinsFirstPass } from '../_augmentedCoinsUtils.js';
 import toSpliced from 'core-js-pure/actual/array/to-spliced.js'; // For compat w/ Node 18
@@ -673,7 +673,7 @@ const getPools = async ({ blockchainId, registryId }) => {
         (
           crvusdTokenAddresseAndPriceMapFallback[coinAddress.toLowerCase()] ||
           coinAddressesAndPricesMapFallback[coinAddress.toLowerCase()] ||
-          (canUseTokenPriceStore ? (getTokenPrice(coinAddress, blockchainId) ?? null) : null) ||
+          (canUseTokenPriceStore ? (getLatestTokenPrice(coinAddress, blockchainId) ?? null) : null) ||
           null
         )
     );
