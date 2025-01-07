@@ -12,18 +12,18 @@
  *         description:
  */
 
-import { allBlockchainIds } from '#root/constants/configs/index.js';
+import { getAllBlockchainIds } from '#root/constants/configs/index.js';
 import getConfigs from '#root/constants/configs/configs.js';
 import { arrayToHashmap } from '#root/utils/Array.js';
 import { fn } from '#root/utils/api.js';
 import getPlatformRegistries from '#root/utils/data/curve-platform-registries.js';
 
 export default fn(async () => ({
-  platforms: arrayToHashmap(await Promise.all((await allBlockchainIds).map(async (blockchainId) => [
+  platforms: arrayToHashmap(await Promise.all((await getAllBlockchainIds()).map(async (blockchainId) => [
     blockchainId,
     (await getPlatformRegistries(blockchainId)).registryIds,
   ]))),
-  platformsMetadata: arrayToHashmap(await Promise.all((await allBlockchainIds).map(async (blockchainId) => {
+  platformsMetadata: arrayToHashmap(await Promise.all((await getAllBlockchainIds()).map(async (blockchainId) => {
     const { isMainnet, rpcUrl, name, chainId, explorerBaseUrl, nativeCurrencySymbol } = (await getConfigs())[blockchainId];
 
     return [blockchainId, {

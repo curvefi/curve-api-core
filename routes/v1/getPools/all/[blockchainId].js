@@ -41,7 +41,7 @@
 import getAllCurvePoolsData from '#root/utils/data/curve-pools-data.js';
 import { fn } from '#root/utils/api.js';
 import { sum } from '#root/utils/Array.js';
-import { allBlockchainIds } from '#root/constants/configs/index.js';
+import { getAllBlockchainIds } from '#root/constants/configs/index.js';
 
 export default fn(async ({ blockchainId }) => {
   const blockchainIds = [blockchainId];
@@ -57,7 +57,7 @@ export default fn(async ({ blockchainId }) => {
   paramSanitizers: {
     // Override default blockchainId sanitizer for this endpoint
     blockchainId: async ({ blockchainId }) => ({
-      isValid: (await allBlockchainIds).includes(blockchainId),
+      isValid: (await getAllBlockchainIds()).includes(blockchainId),
     }),
   },
 });

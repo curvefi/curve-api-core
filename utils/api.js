@@ -1,4 +1,4 @@
-import { allBlockchainIds } from '#root/constants/configs/index.js';
+import { getAllBlockchainIds } from '#root/constants/configs/index.js';
 import swr from '#root/utils/swr.js';
 import { IS_DEV } from '#root/constants/AppConstants.js';
 import { arrayToHashmap } from '#root/utils/Array.js';
@@ -107,7 +107,7 @@ const DEFAULT_OPTIONS = {
   appendGeneratedTime: true,
   paramSanitizers: {
     blockchainId: async ({ blockchainId }) => ({
-      isValid: (await allBlockchainIds).includes(blockchainId),
+      isValid: (await getAllBlockchainIds()).includes(blockchainId),
     }),
     // Note: we could technically go as far as checking if the registry is part of
     // the provided blockchainId (since both params are always passed together), but
