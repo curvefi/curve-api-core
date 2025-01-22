@@ -48,6 +48,7 @@ import { IS_DEV } from '#root/constants/AppConstants.js';
 import { getAugmentedCoinsFirstPass } from '../_augmentedCoinsUtils.js';
 import toSpliced from 'core-js-pure/actual/array/to-spliced.js'; // For compat w/ Node 18
 import getFactoGaugesForPools from '#root/utils/data/getFactoGaugesForPools.js';
+import getEywaTokenPrices from '#root/utils/data/getEywaTokenPrices.js';
 
 /* eslint-disable */
 const POOL_BALANCE_ABI_UINT256 = [{ "gas": 1823, "inputs": [{ "name": "arg0", "type": "uint256" }], "name": "balances", "outputs": [{ "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }];
@@ -532,6 +533,8 @@ const getPools = async ({ blockchainId, registryId }) => {
 
   let coinAddressesAndPricesMapFallback;
   let crvusdTokenAddresseAndPriceMapFallback;
+  let eywaTokensAddressesAndPricesMapFallback;
+
   const coinsFallbackPricesFromCgId = (
     COIN_ADDRESS_COINGECKO_ID_MAP[blockchainId] ?
       await getAssetsPrices(Array.from(Object.values(COIN_ADDRESS_COINGECKO_ID_MAP[blockchainId]))) :
@@ -573,6 +576,12 @@ const getPools = async ({ blockchainId, registryId }) => {
   };
 
   crvusdTokenAddresseAndPriceMapFallback = await getCrvusdPrice(blockchainId);
+
+  eywaTokensAddressesAndPricesMapFallback = (
+    (blockchainId === 'sonic' && registryId === 'factory-stable-ng') ?
+      await getEywaTokenPrices(allCoinAddresses, registryId, blockchainId) :
+      {}
+  );
 
   const coinData = await multiCall(flattenArray(allCoinAddresses.map(({ poolId, address }) => {
     const isNativeEth = address.toLowerCase() === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
@@ -673,6 +682,7 @@ const getPools = async ({ blockchainId, registryId }) => {
         (
           crvusdTokenAddresseAndPriceMapFallback[coinAddress.toLowerCase()] ||
           coinAddressesAndPricesMapFallback[coinAddress.toLowerCase()] ||
+          eywaTokensAddressesAndPricesMapFallback[coinAddress.toLowerCase()] ||
           (canUseTokenPriceStore ? (getLatestTokenPrice(coinAddress, blockchainId) ?? null) : null) ||
           null
         )
