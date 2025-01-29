@@ -49,6 +49,7 @@ import { getAugmentedCoinsFirstPass } from '../_augmentedCoinsUtils.js';
 import toSpliced from 'core-js-pure/actual/array/to-spliced.js'; // For compat w/ Node 18
 import getFactoGaugesForPools from '#root/utils/data/getFactoGaugesForPools.js';
 import getEywaTokenPrices from '#root/utils/data/getEywaTokenPrices.js';
+import { FACTO_STABLE_NG_EYWA_POOL_IDS } from '#root/constants/PoolMetadata.js';
 
 /* eslint-disable */
 const POOL_BALANCE_ABI_UINT256 = [{ "gas": 1823, "inputs": [{ "name": "arg0", "type": "uint256" }], "name": "balances", "outputs": [{ "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }];
@@ -672,10 +673,14 @@ const getPools = async ({ blockchainId, registryId }) => {
 
       return false;
     });
+    const isCoinPairedWithEywaToken = (
+      registryId === 'factory-stable-ng' &&
+      FACTO_STABLE_NG_EYWA_POOL_IDS.includes(poolId)
+    );
     const canUseTokenPriceStore = (
       isCoinAbsentFromRegistryOtherPools ||
       !isCoinPairedWithRef
-    );
+    ) && !isCoinPairedWithEywaToken;
 
     const coinPrice = (
       (IGNORED_COINS[blockchainId] || []).includes(coinAddress.toLowerCase()) ? 0 :
