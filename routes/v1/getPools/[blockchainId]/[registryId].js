@@ -72,7 +72,11 @@ const MAX_AGE = 5 * 60;
 const IGNORED_COINS = {};
 
 // Tokens for which to use Defillama as external price oracle
-const EXTERNAL_ORACLE_COINS_ADDRESSES = {};
+const EXTERNAL_ORACLE_COINS_ADDRESSES = {
+  taiko: [
+    '0xa9d23408b9ba935c230493c40c73824df71a0975', // TAIKO, prevent issues with low-liq pool
+  ].map(lc),
+};
 
 // Lowercase token address <> symbol to use
 const CURVE_POOL_LP_SYMBOLS_OVERRIDES = new Map([]);

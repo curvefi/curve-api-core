@@ -77,6 +77,7 @@ const getConfigs = memoize(async () => {
 }, {
   maxAge: 10 * 60 * 1000,
   preFetch: true,
+  promise: true,
 });
 
 export default getConfigs;
