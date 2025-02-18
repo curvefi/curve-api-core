@@ -13,7 +13,8 @@ const ethereumWeb3Config = {
 const getContractInstance = memoize((address, abi, account, library, chainId) => (
   new library.eth.Contract(abi, address)
 ), {
-  maxAge: 60 * 1000,
+  // maxAge: 60 * 60 * 1000,
+  normalizer: ([address, abi, account, library, chainId]) => `${address}-${abi.map(({ name }) => name).join(',')}-${chainId}`,
 });
 
 const getEncodedCalls = (callsConfig) => {
