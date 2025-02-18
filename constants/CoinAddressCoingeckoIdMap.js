@@ -21,6 +21,7 @@ const HARDCODED_DATA = {
   'taiko': {
     '0xc8F4518ed4bAB9a972808a493107926cE8237068': 'crvusd',
     '0x07d83526730c7438048D55A4fc0b850e2aaB6f0b': 'usd-coin',
+    '0x09413312b263fd252c16e592a45f4689f26cb79d': 'curve-dao-token',
   },
   'neon': {
     '0xc659b2633ed725e5346396a609d8f31794d6ac50': 'usd-coin',
