@@ -11,7 +11,7 @@ const octokit = new Octokit({
 });
 
 const getConfigs = memoize(async () => {
-  const filePaths = await sequentialPromiseFlatMap(['prod', 'devnet'], async (folder) => (
+  const filePaths = await sequentialPromiseFlatMap(['devnet', 'prod'], async (folder) => (
     octokit.rest.repos.getContent({
       owner: 'curvefi',
       repo: 'curve-core',
