@@ -30,6 +30,10 @@ const HARDCODED_DATA = {
   'corn': {
     '0xEAEdD2B1b3F0fEC6388A4d6b2fE500B59Fd9f755': 'crvusd',
   },
+  'sonic': {
+    '0x7fff4c4a827c84e32c5e175052834111b2ccd270': 'crvusd',
+    '0x6047828dc181963ba44974801ff68e538da5eaf9': 'tether',
+  },
 };
 
 const getCoinAddressCoingeckoIdMap = memoize(async () => {
