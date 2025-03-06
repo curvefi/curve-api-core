@@ -1011,6 +1011,7 @@ const getPools = async ({ blockchainId, registryId }) => {
       lpTokenPrice: gaugeData?.lpTokenPrice,
       gaugeExtraRewards: gaugeData?.extraRewards,
       gaugeIsKilled: gaugeData?.isKilled,
+      gaugeCrvApy: gaugeData?.gaugeCrvApy,
     };
   });
 

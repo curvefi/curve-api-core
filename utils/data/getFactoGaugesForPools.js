@@ -17,6 +17,7 @@ import getFactoryV2SidechainGaugeRewards from '#root/utils/data/getFactoryV2Side
 import { sequentialPromiseFlatMap } from '#root/utils/Async.js';
 import { ethereumWeb3Config } from '#root/utils/Web3/web3.js';
 import memoize from 'memoizee';
+import getAssetsPrices from '#root/utils/data/assets-prices.js';
 
 const getFactoGaugesForPools = memoize(async (poolsData, blockchainId) => {
   const config = (await getConfigs())[blockchainId];
@@ -38,6 +39,10 @@ const getFactoGaugesForPools = memoize(async (poolsData, blockchainId) => {
     gaugeRegistryAddress,
     gaugeRegistryAddress2,
   ]);
+
+  const {
+    ['curve-dao-token']: crvPrice,
+  } = await getAssetsPrices(['curve-dao-token']);
 
   const gauges = await sequentialPromiseFlatMap(gaugeRegistryAddresses, async (registryAddress) => {
     const [mirroredGaugeCount] = await multiCall([{
@@ -270,9 +275,17 @@ const getFactoGaugesForPools = memoize(async (poolsData, blockchainId) => {
         (differenceInWeeks(fromUnixTime(lastRequest), fromUnixTime(0)) !== currentWeekNumber)
       );
 
+      const isKilled = gaugesKilledInfo[unfilteredGaugeList.findIndex((gaugeAddress) => lc(gaugeAddress) === lc(address))];
+
+      const gaugeCrvBaseApy = (
+        (!isKilled && Number(workingSupply) > 0 && lpTokenPrice > 0) ? (
+          (effectiveInflationRate / 1e18) * 1 * 31536000 / (workingSupply / 1e18) * 0.4 * crvPrice / lpTokenPrice * 100
+        ) : undefined
+      );
+
       return {
         gaugeAddress: address,
-        hasCrv,
+        hasCrv: (gaugeCrvBaseApy !== undefined && gaugeCrvBaseApy > 0) ? true : hasCrv, // Temp fix
         gaugeData: {
           workingSupply,
           totalSupply,
@@ -282,6 +295,11 @@ const getFactoGaugesForPools = memoize(async (poolsData, blockchainId) => {
           inflationRate: effectiveInflationRate,
         },
         lpTokenPrice,
+        gaugeCrvApy: (
+          gaugeCrvBaseApy !== undefined ?
+            [gaugeCrvBaseApy, (gaugeCrvBaseApy * 2.5)] :
+            undefined
+        ),
         poolAddress,
         rewardsNeedNudging,
         areCrvRewardsStuckInBridge: (
@@ -289,7 +307,7 @@ const getFactoGaugesForPools = memoize(async (poolsData, blockchainId) => {
           Number(inflationRate) === 0 &&
           !rewardsNeedNudging
         ),
-        isKilled: gaugesKilledInfo[unfilteredGaugeList.findIndex((gaugeAddress) => lc(gaugeAddress) === lc(address))],
+        isKilled,
       };
     });
 

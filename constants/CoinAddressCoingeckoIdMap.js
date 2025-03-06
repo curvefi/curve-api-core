@@ -33,6 +33,7 @@ const HARDCODED_DATA = {
   'sonic': {
     '0x7fff4c4a827c84e32c5e175052834111b2ccd270': 'crvusd',
     '0x6047828dc181963ba44974801ff68e538da5eaf9': 'tether',
+    '0x3bcE5CB273F0F148010BbEa2470e7b5df84C7812': 'rings-sc-eth',
   },
 };
 
