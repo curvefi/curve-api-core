@@ -127,6 +127,11 @@ const getPools = async ({ blockchainId, registryId }) => {
     return { poolData: [] };
   }
 
+  // Disable expchain testnet until a solution is found to rpc errors
+  if (blockchainId === 'expchain') {
+    return { poolData: [] };
+  }
+
   const assetTypeMap = new Map([
     ['0', 'usd'],
     ['1', nativeCurrencySymbol.toLowerCase()],
