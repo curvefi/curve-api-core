@@ -48,7 +48,7 @@ const getConfigs = memoize(async () => {
         platformCoingeckoId: yamlConfig.config.platform_coingecko_id,
         rpcUrl: yamlConfig.config.public_rpc_url,
         explorerBaseUrl: explorerBaseUrlWithTrailingSlash,
-        multicall2Address: '0xca11bde05977b3631167028862be2a173976ca11', // Assumes multicall is deployed on all chains at this same address
+        multicall2Address: yamlConfig.config.multicall3 ?? yamlConfig.config.multicall2,
         getFactoryTricryptoRegistryAddress: async () => yamlConfig.contracts.amm.tricryptoswap.factory.address,
         getFactoryTwocryptoRegistryAddress: async () => yamlConfig.contracts.amm.twocryptoswap.factory.address,
         getFactoryStableswapNgRegistryAddress: async () => yamlConfig.contracts.amm.stableswap.factory.address,
