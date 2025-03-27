@@ -4,6 +4,7 @@ import YAML from 'yaml';
 import memoize from 'memoizee';
 import { Octokit } from '@octokit/rest';
 import { sequentialPromiseFlatMap, sequentialPromiseMap } from '#root/utils/Async.js';
+import { ZERO_ADDRESS } from '#root/utils/Web3/web3.js';
 
 const DISABLED_NETWORK_IDS = [
 ];
@@ -40,6 +41,10 @@ const getConfigs = memoize(async () => {
           `${yamlConfig.config.explorer_base_url}/`
       );
 
+      // Make any falsy value AND ZERO_ADDRESS default to Multicall3 deployment address
+      let multicallAddress = yamlConfig.config.multicall3 || yamlConfig.config.multicall2 || ZERO_ADDRESS;
+      if (multicallAddress === ZERO_ADDRESS) multicallAddress = '0xca11bde05977b3631167028862be2a173976ca11';
+
       const config = {
         isMainnet: filePath.startsWith('deployments/prod'),
         hasNoMainRegistry: true, // No main registry deployed nor address provider
@@ -53,7 +58,7 @@ const getConfigs = memoize(async () => {
         platformCoingeckoId: yamlConfig.config.platform_coingecko_id,
         rpcUrl: yamlConfig.config.public_rpc_url,
         explorerBaseUrl: explorerBaseUrlWithTrailingSlash,
-        multicall2Address: yamlConfig.config.multicall3 || yamlConfig.config.multicall2 || '0xca11bde05977b3631167028862be2a173976ca11',
+        multicall2Address: multicallAddress,
         getFactoryTricryptoRegistryAddress: async () => yamlConfig.contracts.amm.tricryptoswap.factory.address,
         getFactoryTwocryptoRegistryAddress: async () => yamlConfig.contracts.amm.twocryptoswap.factory.address,
         getFactoryStableswapNgRegistryAddress: async () => yamlConfig.contracts.amm.stableswap.factory.address,
