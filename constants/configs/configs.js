@@ -1,9 +1,12 @@
-import { arrayToHashmap } from '#root/utils/Array.js';
+import { arrayToHashmap, removeNulls } from '#root/utils/Array.js';
 import { lc } from '#root/utils/String.js';
 import YAML from 'yaml';
 import memoize from 'memoizee';
 import { Octokit } from '@octokit/rest';
 import { sequentialPromiseFlatMap, sequentialPromiseMap } from '#root/utils/Async.js';
+
+const DISABLED_NETWORK_IDS = [
+];
 
 const octokit = new Octokit({
   auth: process.env.GITHUB_FINE_GRAINED_PERSONAL_ACCESS_TOKEN,
@@ -29,6 +32,8 @@ const getConfigs = memoize(async () => {
       const yamlConfig = YAML.parse(yamlFile);
 
       const networkId = yamlConfig.config.file_name;
+      if (DISABLED_NETWORK_IDS.includes(networkId)) return null;
+
       const explorerBaseUrlWithTrailingSlash = (
         yamlConfig.config.explorer_base_url.slice(-1) === '/' ?
           yamlConfig.config.explorer_base_url :
@@ -71,7 +76,7 @@ const getConfigs = memoize(async () => {
 
       return [networkId, config];
     })
-  )).then((res) => arrayToHashmap(res));
+  )).then((res) => arrayToHashmap(removeNulls(res)));
 
   return configs;
 }, {
