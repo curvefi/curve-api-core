@@ -35,6 +35,9 @@ const HARDCODED_DATA = {
     '0x6047828dc181963ba44974801ff68e538da5eaf9': 'tether',
     '0x3bcE5CB273F0F148010BbEa2470e7b5df84C7812': 'rings-sc-eth',
   },
+  'hyperliquid': {
+    '0x5555555555555555555555555555555555555555': 'wrapped-hype',
+  },
 };
 
 const getCoinAddressCoingeckoIdMap = memoize(async () => {
