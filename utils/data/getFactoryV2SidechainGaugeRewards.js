@@ -12,6 +12,7 @@ import ERC20_ABI from '#root/constants/abis/erc20.json' assert { type: 'json' };
 import SIDECHAIN_FACTO_GAUGE_ABI from '#root/constants/abis/sidechain-gauge.json' assert { type: 'json' };
 import getCoinAddressCoingeckoIdMap from '#root/constants/CoinAddressCoingeckoIdMap.js';
 import { getTokenPrice } from '#root/utils/data/tokens-prices-store.js';
+import { lc } from '#root/utils/String.js';
 
 export default memoize(async ({ blockchainId, gauges }) => {
   const config = (await getConfigs())[blockchainId];
@@ -83,7 +84,11 @@ export default memoize(async ({ blockchainId, gauges }) => {
         Array.from(Object.entries(COIN_ADDRESS_COINGECKO_ID_MAP[blockchainId]))
           .map(([address, coingeckoId]) => [
             address.toLowerCase(),
-            coinsFallbackPrices[coingeckoId],
+            (
+              // popCORN token is locked, 21% of it is liquid at distribution time
+              (blockchainId === 'corn' && lc(address) === lc('0x9Cf9F00F3498c2ac856097087e041523dfdD71fF')) ? (coinsFallbackPrices[coingeckoId] * 0.21) :
+                coinsFallbackPrices[coingeckoId]
+            ),
           ])
       ) :
       {}

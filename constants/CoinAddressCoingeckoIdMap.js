@@ -30,6 +30,8 @@ const HARDCODED_DATA = {
   'corn': {
     '0xEAEdD2B1b3F0fEC6388A4d6b2fE500B59Fd9f755': 'crvusd',
     '0xda5dDd7270381A7C2717aD10D1c0ecB19e3CDFb2': 'wrapped-bitcorn',
+    '0x44f49ff0da2498bcb1d3dc7c0f999578f67fd8c6': 'corn-3', // CORN
+    '0x9Cf9F00F3498c2ac856097087e041523dfdD71fF': 'corn-3', // popCORN
   },
   'sonic': {
     '0x7fff4c4a827c84e32c5e175052834111b2ccd270': 'crvusd',
