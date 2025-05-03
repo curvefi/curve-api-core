@@ -12,7 +12,11 @@
 
 import { fn } from '#root/utils/api.js';
 
-const HIDDEN_POOLS_IDS = {};
+const HIDDEN_POOLS_IDS = {
+  hyperliquid: [
+    'factory-stable-ng-6', // test pool, team asked to hide it
+  ],  
+};
 
 export default fn(async () => HIDDEN_POOLS_IDS, {
   maxAge: 60 * 60,
