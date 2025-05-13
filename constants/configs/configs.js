@@ -49,7 +49,7 @@ const getConfigs = memoize(async () => {
         isMainnet: filePath.startsWith('deployments/prod'),
         hasNoMainRegistry: true, // No main registry deployed nor address provider
         poolsBaseUrlOld: null,
-        poolsBaseUrl: `https://core.curve.fi/#/${networkId}/pools/`,
+        poolsBaseUrl: `https://curve.finance/dex/${networkId}/pools/`,
         shortId: networkId,
         name: yamlConfig.config.network_name,
         nativeCurrencySymbol: yamlConfig.config.native_currency_symbol,

@@ -8,9 +8,9 @@ Features:
 
 # Documentation
 
-<https://api-core.curve.fi/v1/documentation>
+<https://api-core.curve.finance/v1/documentation>
 
-OpenAPI specification: <https://api-core.curve.fi/v1/openapi.json>
+OpenAPI specification: <https://api-core.curve.finance/v1/openapi.json>
 
 # Development
 

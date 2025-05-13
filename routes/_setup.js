@@ -74,10 +74,10 @@ export default async function (app) {
     definition: {
       openapi: '3.0.0',
       info: {
-        title: 'Curve.fi Core API',
+        title: 'Curve.finance Core API',
         version: '1.0.0',
       },
-      servers: [{ url: 'https://api-core.curve.fi/v1' }],
+      servers: [{ url: 'https://api-core.curve.finance/v1' }],
       components: {
         parameters: {
           blockchainId: {
