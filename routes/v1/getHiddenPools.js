@@ -16,6 +16,9 @@ const HIDDEN_POOLS_IDS = {
   hyperliquid: [
     'factory-stable-ng-6', // test pool, team asked to hide it
     'factory-stable-ng-11', // test pool, team asked to hide it
+  ],
+  xdc: [
+    'factory-tricrypto-1', // test pool, team asked to hide it
   ],  
 };
 
