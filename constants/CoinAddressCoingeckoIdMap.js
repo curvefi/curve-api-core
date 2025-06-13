@@ -41,6 +41,9 @@ const HARDCODED_DATA = {
   'hyperliquid': {
     '0x5555555555555555555555555555555555555555': 'wrapped-hype',
   },
+  'plume': {
+    '0xdddD73F5Df1F0DC31373357beAC77545dC5A6f3F': 'plume-usd',
+  },
 };
 
 const getCoinAddressCoingeckoIdMap = memoize(async () => {
