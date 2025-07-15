@@ -21,9 +21,10 @@ const HIDDEN_POOLS_IDS = {
     'factory-tricrypto-1', // test pool, team asked to hide it
   ],  
   tac: [
-    'factory-stable-ng-0', // pool will redeployed, team asked to hide it
-    'factory-stable-ng-1', // pool will redeployed, team asked to hide it 
-    'factory-twocrypto-4', // pool will redeployed, team asked to hide it 
+    'factory-stable-ng-0', // pool redeployed, team asked to hide it
+    'factory-stable-ng-1', // pool redeployed, team asked to hide it 
+    'factory-twocrypto-4', // pool redeployed, team asked to hide it 
+    'factory-stable-ng-5', // pool redeployed, team asked to hide it
   ], 
 };
 
