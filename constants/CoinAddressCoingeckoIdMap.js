@@ -44,6 +44,9 @@ const HARDCODED_DATA = {
   'plume': {
     '0xdddD73F5Df1F0DC31373357beAC77545dC5A6f3F': 'plume-usd',
   },
+  'tac': {
+    '0xB63B9f0eb4A6E6f191529D71d4D88cc8900Df2C9': 'tac', // wTAC
+  },
 };
 
 const getCoinAddressCoingeckoIdMap = memoize(async () => {
