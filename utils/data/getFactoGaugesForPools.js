@@ -147,6 +147,11 @@ const getFactoGaugesForPools = memoize(async (poolsData, blockchainId) => {
         metaData: { gaugeAddress, type: 'totalSupply' },
       }, {
         ...baseConfigData,
+        abi: [{ "stateMutability": "view", "type": "function", "name": "root_gauge", "inputs": [], "outputs": [{ "name": "", "type": "address" }] }],
+        methodName: 'root_gauge',
+        metaData: { gaugeAddress, type: 'rootGaugeAddress' },
+      }, {
+        ...baseConfigData,
         methodName: 'inflation_rate',
         params: [startOfWeekTs],
         metaData: { gaugeAddress, type: 'inflationRate' },
@@ -266,6 +271,7 @@ const getFactoGaugesForPools = memoize(async (poolsData, blockchainId) => {
       poolVirtualPrice,
       isMirrored,
       lastRequest,
+      rootGaugeAddress,
     }) => {
       const effectiveInflationRate = Number(inflationRate) || (getGaugeWeight > 0 ? pendingEmissions[address] : 0);
       const rewardsNeedNudging = (
@@ -285,6 +291,7 @@ const getFactoGaugesForPools = memoize(async (poolsData, blockchainId) => {
 
       return {
         gaugeAddress: address,
+        rootGaugeAddress,
         hasCrv: (gaugeCrvBaseApy !== undefined && gaugeCrvBaseApy > 0) ? true : hasCrv, // Temp fix
         gaugeData: {
           workingSupply,
