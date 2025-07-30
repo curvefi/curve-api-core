@@ -25,6 +25,8 @@ const HIDDEN_POOLS_IDS = {
     'factory-stable-ng-1', // pool redeployed, team asked to hide it 
     'factory-twocrypto-4', // pool redeployed, team asked to hide it 
     'factory-stable-ng-5', // pool redeployed, team asked to hide it
+    'factory-stable-ng-13', // team asked to hide it
+    'factory-twocrypto-0', // team asked to hide it
   ], 
 };
 
