@@ -48,6 +48,9 @@ const HARDCODED_DATA = {
     '0xB63B9f0eb4A6E6f191529D71d4D88cc8900Df2C9': 'tac', // wTAC
     '0xecAc9C5F704e954931349Da37F60E39f515c11c1': 'lombard-staked-btc', 
   },
+  'etherlink': {
+    '0xecAc9C5F704e954931349Da37F60E39f515c11c1': 'lombard-staked-btc',
+  },
 };
 
 const getCoinAddressCoingeckoIdMap = memoize(async () => {
