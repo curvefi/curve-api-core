@@ -27,7 +27,10 @@ const HIDDEN_POOLS_IDS = {
     'factory-stable-ng-5', // pool redeployed, team asked to hide it
     'factory-stable-ng-13', // team asked to hide it
     'factory-twocrypto-0', // team asked to hide it
-  ], 
+  ],
+  etherelink: [
+    'factory-stable-ng-5', // wrong deployed pool, team asked to hide
+  ],
 };
 
 export default fn(async () => HIDDEN_POOLS_IDS, {
