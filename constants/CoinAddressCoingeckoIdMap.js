@@ -49,6 +49,7 @@ const HARDCODED_DATA = {
     '0xecAc9C5F704e954931349Da37F60E39f515c11c1': 'lombard-staked-btc',
     '0x61D66bC21fED820938021B06e9b2291f3FB91945': 'ethereum', // wETH
     '0xAf368c91793CB22739386DFCbBb2F1A9e4bCBeBf': 'wrapped-steth', // wstETH
+    '0xae4efbc7736f963982aacb17efa37fcbab924cb3': 'solv-btc', // SolvBTC
   },
   'etherlink': {
     '0xecAc9C5F704e954931349Da37F60E39f515c11c1': 'lombard-staked-btc',
