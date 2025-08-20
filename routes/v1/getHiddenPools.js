@@ -31,6 +31,14 @@ const HIDDEN_POOLS_IDS = {
   etherlink: [
     'factory-stable-ng-5', // wrong deployed pool, team asked to hide
   ],
+  plume: [
+    'factory-stable-ng-34', // spam
+    'factory-stable-ng-39', // spam
+    'factory-stable-ng-41', // spam
+    'factory-twocrypto-30', // spam
+    'factory-twocrypto-31', // spam
+    'factory-tricrypto-7', // spam
+  ],
 };
 
 export default fn(async () => HIDDEN_POOLS_IDS, {
