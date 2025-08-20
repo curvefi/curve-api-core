@@ -69,7 +69,13 @@ const ORACLIZED_POOL_DETECTION_ABI = [{ "stateMutability": "view", "type": "func
 
 const MAX_AGE = 5 * 60;
 
-const IGNORED_COINS = {};
+const IGNORED_COINS = {
+  plume: [
+    '0x01Ef898242d5D95B00880b9c49Ca3dEa7b0199aC', // spam
+    '0xCCA84731C19EB911C985E9d1892E0935C104Abce', // spam
+    '0xCfEc8129ecf97e56F106392c04eD02BC20fC7FeC', // spam
+  ].map(lc),
+};
 
 // Tokens for which to use Defillama as external price oracle
 const EXTERNAL_ORACLE_COINS_ADDRESSES = {
