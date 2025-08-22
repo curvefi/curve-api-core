@@ -46,11 +46,12 @@ const HARDCODED_DATA = {
   },
   'tac': {
     '0xB63B9f0eb4A6E6f191529D71d4D88cc8900Df2C9': 'tac', // wTAC
-    '0xecAc9C5F704e954931349Da37F60E39f515c11c1': 'lombard-staked-btc',
+    '0xecAc9C5F704e954931349Da37F60E39f515c11c1': 'lombard-staked-btc', // LBTC
     '0x61D66bC21fED820938021B06e9b2291f3FB91945': 'ethereum', // wETH
     '0xAf368c91793CB22739386DFCbBb2F1A9e4bCBeBf': 'wrapped-steth', // wstETH
     '0xae4efbc7736f963982aacb17efa37fcbab924cb3': 'solv-btc', // SolvBTC
     '0xF9775085d726E782E83585033B58606f7731AB18': 'universal-btc', // uniBTC
+    '0xb76d91340F5CE3577f0a056D29f6e3Eb4E88B140': 'the-open-network', // TON
   },
   'etherlink': {
     '0xecAc9C5F704e954931349Da37F60E39f515c11c1': 'lombard-staked-btc',
