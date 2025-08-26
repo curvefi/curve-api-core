@@ -52,6 +52,8 @@ const HARDCODED_DATA = {
     '0xae4efbc7736f963982aacb17efa37fcbab924cb3': 'solv-btc', // SolvBTC
     '0xF9775085d726E782E83585033B58606f7731AB18': 'universal-btc', // uniBTC
     '0xb76d91340F5CE3577f0a056D29f6e3Eb4E88B140': 'the-open-network', // TON
+    '0x27e4Ade13d78Aad45bea31D448f5504031e4871E': 'dogwifcoin', // WIF
+    '0x4CBE838E2BD3B46247f80519B6aC79363298aa09': 'satlayer-restaked-unibtc', // satuniBTC
   },
   'etherlink': {
     '0xecAc9C5F704e954931349Da37F60E39f515c11c1': 'lombard-staked-btc',
