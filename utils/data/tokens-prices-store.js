@@ -156,6 +156,11 @@ setInterval(() => {
   }
 }, 60 * 1000);
 
+// Temporary patch until stale prices lingering can be fixed: erase cache every hour to force recomputation
+setInterval(() => {
+  storage.setItem(REDIS_CACHE_KEY, JSON.stringify({}));
+}, 60 * 60 * 1000);
+
 export {
   setTokenPrice,
   getTokenPrice,
