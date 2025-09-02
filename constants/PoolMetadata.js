@@ -5,11 +5,19 @@
 const EYWA_POOLS_METADATA = [{
   sonicFactoryStableNgPoolId: 2,
   shortName: 'CrossCurve CRV',
+}, {
+  taikoFactoryStableNgPoolId: 5,
+  shortName: 'CrossCurve Stable',
+}, {
+  taikoFactoryStableNgPoolId: 6,
+  shortName: 'CrossCurve WETH',
 }];
 
-const FACTO_STABLE_NG_EYWA_POOL_IDS = EYWA_POOLS_METADATA.map(({ sonicFactoryStableNgPoolId }) => sonicFactoryStableNgPoolId);
+const SONIC_FACTO_STABLE_NG_EYWA_POOL_IDS = EYWA_POOLS_METADATA.map(({ sonicFactoryStableNgPoolId }) => sonicFactoryStableNgPoolId).filter((str) => !!str);
+const TAIKO_FACTO_STABLE_NG_EYWA_POOL_IDS = EYWA_POOLS_METADATA.map(({ taikoFactoryStableNgPoolId }) => taikoFactoryStableNgPoolId).filter((str) => !!str);
 
 export {
   EYWA_POOLS_METADATA,
-  FACTO_STABLE_NG_EYWA_POOL_IDS,
+  SONIC_FACTO_STABLE_NG_EYWA_POOL_IDS,
+  TAIKO_FACTO_STABLE_NG_EYWA_POOL_IDS,
 };

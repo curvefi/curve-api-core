@@ -1,7 +1,7 @@
 import memoize from 'memoizee';
 import { arrayToHashmap } from '#root/utils/Array.js';
 import groupBy from 'lodash.groupby';
-import { FACTO_STABLE_NG_EYWA_POOL_IDS } from '#root/constants/PoolMetadata.js';
+import { SONIC_FACTO_STABLE_NG_EYWA_POOL_IDS, TAIKO_FACTO_STABLE_NG_EYWA_POOL_IDS } from '#root/constants/PoolMetadata.js';
 import getConfigs from '#root/constants/configs/index.js';
 
 // Eywa API isn’t reliable, this keeps a copy last prices for when live prices aren’t available
@@ -29,7 +29,8 @@ const getEywaTokenPrices = memoize(async (
   const config = (await getConfigs())[blockchainId];
 
   const filteredCoinAddresses = allCoinAddresses.filter(({ poolId }) => (
-    FACTO_STABLE_NG_EYWA_POOL_IDS.includes(poolId)
+    (blockchainId === 'sonic' && SONIC_FACTO_STABLE_NG_EYWA_POOL_IDS.includes(poolId)) ||
+    (blockchainId === 'taiko' && TAIKO_FACTO_STABLE_NG_EYWA_POOL_IDS.includes(poolId))
   ));
   const firstTokenOfEachEywaPool = Array.from(Object.values(groupBy(filteredCoinAddresses, 'poolId'))).map(([{ address }]) => address);
   const allTokenAddresses = [
