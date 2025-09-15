@@ -56,7 +56,10 @@ const HARDCODED_DATA = {
     '0x4CBE838E2BD3B46247f80519B6aC79363298aa09': 'satlayer-restaked-unibtc', // satuniBTC
   },
   'etherlink': {
-    '0xecAc9C5F704e954931349Da37F60E39f515c11c1': 'lombard-staked-btc',
+    '0xecAc9C5F704e954931349Da37F60E39f515c11c1': 'lombard-staked-btc', // LBTC
+    '0xbFc94CD2B1E55999Cfc7347a9313e88702B83d0F': 'wrapped-bitcoin', // WBTC
+    '0xc9B53AB2679f573e480d01e0f49e2B5CFB7a3EAb': 'wrapped-xtz', // WXTZ
+    '0x01F07f4d78d47A64F4C3B2b65f513f15Be6E1854': 'stacy-staked-xtz', // stXTZ
   },
 };
 
