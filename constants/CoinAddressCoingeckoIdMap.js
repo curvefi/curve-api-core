@@ -61,6 +61,10 @@ const HARDCODED_DATA = {
     '0xc9B53AB2679f573e480d01e0f49e2B5CFB7a3EAb': 'wrapped-xtz', // WXTZ
     '0x01F07f4d78d47A64F4C3B2b65f513f15Be6E1854': 'stacy-staked-xtz', // stXTZ
   },
+  'plasma': {
+    '0xb8ce59fc3717ada4c02eadf9682a9e934f625ebb': 'usdt0', // USDT0
+    '0x5d3a1ff2b6bab83b63cd9ad0787074081a52ef34': 'ethena-usde', // USDe
+  },
 };
 
 const getCoinAddressCoingeckoIdMap = memoize(async () => {
