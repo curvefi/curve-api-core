@@ -64,6 +64,8 @@ const HARDCODED_DATA = {
   'plasma': {
     '0xb8ce59fc3717ada4c02eadf9682a9e934f625ebb': 'usdt0', // USDT0
     '0x5d3a1ff2b6bab83b63cd9ad0787074081a52ef34': 'ethena-usde', // USDe
+    '0x9895D81bB462A195b4922ED7De0e3ACD007c32CB': 'weth', // WETH
+    '0xe561FE05C39075312Aa9Bc6af79DdaE981461359': 'wrapped-rseth', // wrsETH
   },
 };
 
