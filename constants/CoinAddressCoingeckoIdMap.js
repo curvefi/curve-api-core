@@ -60,6 +60,7 @@ const HARDCODED_DATA = {
     '0xbFc94CD2B1E55999Cfc7347a9313e88702B83d0F': 'wrapped-bitcoin', // WBTC
     '0xc9B53AB2679f573e480d01e0f49e2B5CFB7a3EAb': 'wrapped-xtz', // WXTZ
     '0x01F07f4d78d47A64F4C3B2b65f513f15Be6E1854': 'stacy-staked-xtz', // stXTZ
+    '0x733d504435a49FC8C4e9759e756C2846c92f0160': 'midas-mre7yield', // mRe7YIELD
   },
   'plasma': {
     '0xb8ce59fc3717ada4c02eadf9682a9e934f625ebb': 'usdt0', // USDT0
