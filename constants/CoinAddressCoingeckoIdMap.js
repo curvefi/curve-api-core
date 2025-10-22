@@ -54,6 +54,7 @@ const HARDCODED_DATA = {
     '0xb76d91340F5CE3577f0a056D29f6e3Eb4E88B140': 'the-open-network', // TON
     '0x27e4Ade13d78Aad45bea31D448f5504031e4871E': 'dogwifcoin', // WIF
     '0x4CBE838E2BD3B46247f80519B6aC79363298aa09': 'satlayer-restaked-unibtc', // satuniBTC
+    '0x7048c9e4aBD0cf0219E95a17A8C6908dfC4f0Ee4': 'coinbase-wrapped-btc', // cbBTC
   },
   'etherlink': {
     '0xecAc9C5F704e954931349Da37F60E39f515c11c1': 'lombard-staked-btc', // LBTC
