@@ -39,6 +39,9 @@ const HIDDEN_POOLS_IDS = {
     'factory-twocrypto-31', // spam
     'factory-tricrypto-7', // spam
   ],
+  unichain: [
+    'factory-stable-ng-0', // wrong deployed pool
+  ],
 };
 
 export default fn(async () => HIDDEN_POOLS_IDS, {
