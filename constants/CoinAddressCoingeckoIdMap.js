@@ -72,6 +72,7 @@ const HARDCODED_DATA = {
   'unichain': {
     '0xc02fE7317D4eb8753a02c35fe019786854A92001': 'wrapped-steth', // wstETH
     '0x4200000000000000000000000000000000000006': 'weth', // WETH
+  },  
 };
 
 const getCoinAddressCoingeckoIdMap = memoize(async () => {
