@@ -73,6 +73,11 @@ const HARDCODED_DATA = {
     '0xc02fE7317D4eb8753a02c35fe019786854A92001': 'wrapped-steth', // wstETH
     '0x4200000000000000000000000000000000000006': 'weth', // WETH
   },  
+  'monad': {
+    '0x00000000eFE302BEAA2b3e6e1b18d08D69a9012a': 'agora-dollar', // AUSD
+    '0x754704Bc059F8C67012fEd69BC8A327a5aafb603': 'usd-coin', // USDC
+    '0xe7cd86e13AC4309349F30B3435a9d337750fC82D': 'usdt0', // USDT0
+  },
 };
 
 const getCoinAddressCoingeckoIdMap = memoize(async () => {
