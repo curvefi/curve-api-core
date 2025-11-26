@@ -42,6 +42,10 @@ const HIDDEN_POOLS_IDS = {
   unichain: [
     'factory-stable-ng-0', // wrong deployed pool
   ],
+  monad: [
+    'factory-stable-ng-5', // Team asked to hide
+    'factory-stable-ng-7', // Team asked to hide
+  ],
 };
 
 export default fn(async () => HIDDEN_POOLS_IDS, {
