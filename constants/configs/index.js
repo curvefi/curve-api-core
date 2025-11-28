@@ -4,7 +4,7 @@ const getConfigByRpcUrl = async (rpcUrl) => (
   Object.entries(await getConfigs()).find(([, config]) => config.rpcUrl === rpcUrl)
 );
 
-const getAllBlockchainIds = async () => getConfigs().then((configs) => Object.keys(configs));
+const getAllBlockchainIds = async (returnOnlyEnabledNetworkIds = true) => getConfigs(returnOnlyEnabledNetworkIds).then((configs) => Object.keys(configs));
 
 export default getConfigs;
 export {

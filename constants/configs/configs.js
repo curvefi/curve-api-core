@@ -15,7 +15,7 @@ const octokit = new Octokit({
   userAgent: process.env.GITHUB_API_UA,
 });
 
-const getConfigs = memoize(async () => {
+const getConfigs = memoize(async (returnOnlyEnabledNetworkIds = true) => {
   const filePaths = await sequentialPromiseFlatMap(['devnet', 'prod'], async (folder) => (
     octokit.rest.repos.getContent({
       owner: 'curvefi',
@@ -34,7 +34,7 @@ const getConfigs = memoize(async () => {
       const yamlConfig = YAML.parse(yamlFile);
 
       const networkId = yamlConfig.config.file_name;
-      if (DISABLED_NETWORK_IDS.includes(networkId)) return null;
+      if (returnOnlyEnabledNetworkIds && DISABLED_NETWORK_IDS.includes(networkId)) return null;
 
       const explorerBaseUrlWithTrailingSlash = (
         yamlConfig.config.explorer_base_url.slice(-1) === '/' ?
@@ -89,6 +89,7 @@ const getConfigs = memoize(async () => {
   maxAge: 10 * 60 * 1000,
   preFetch: true,
   promise: true,
+  length: 1,
 });
 
 export default getConfigs;
