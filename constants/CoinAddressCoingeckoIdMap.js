@@ -81,7 +81,7 @@ const HARDCODED_DATA = {
     '0x10Aeaf63194db8d453d4D85a06E5eFE1dd0b5417': 'wrapped-steth', // wstETH
     '0xA3D68b74bF0528fdD07263c60d6488749044914b': 'wrapped-eeth', // weETH
     '0x0555E30da8f98308EdB960aa94C0Db47230d2B9c': 'wrapped-bitcoin', // WBTC
-    '0xecAc9C5F704e954931349Da37F60E39f515c11c1': 'lombard-staked-btc", // LBTC
+    '0xecAc9C5F704e954931349Da37F60E39f515c11c1': 'lombard-staked-btc', // LBTC
   },
 };
 
