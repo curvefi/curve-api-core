@@ -77,6 +77,11 @@ const HARDCODED_DATA = {
     '0x00000000eFE302BEAA2b3e6e1b18d08D69a9012a': 'agora-dollar', // AUSD
     '0x754704Bc059F8C67012fEd69BC8A327a5aafb603': 'usd-coin', // USDC
     '0xe7cd86e13AC4309349F30B3435a9d337750fC82D': 'usdt0', // USDT0
+    '0xEE8c0E9f1BFFb4Eb878d8f15f368A02a35481242': 'weth', // WETH
+    '0x10Aeaf63194db8d453d4D85a06E5eFE1dd0b5417': 'wrapped-steth', // wstETH
+    '0xA3D68b74bF0528fdD07263c60d6488749044914b': 'wrapped-eeth', // weETH
+    '0x0555E30da8f98308EdB960aa94C0Db47230d2B9c': 'wrapped-bitcoin', // WBTC
+    '0xecAc9C5F704e954931349Da37F60E39f515c11c1': 'lombard-staked-btc", // LBTC
   },
 };
 
