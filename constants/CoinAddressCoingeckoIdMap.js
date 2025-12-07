@@ -83,6 +83,7 @@ const HARDCODED_DATA = {
     '0x0555E30da8f98308EdB960aa94C0Db47230d2B9c': 'wrapped-bitcoin', // WBTC
     '0xecAc9C5F704e954931349Da37F60E39f515c11c1': 'lombard-staked-btc', // LBTC
     '0xB0F70C0bD6FD87dbEb7C10dC692a2a6106817072': 'bitcoin-avalanche-bridged-btc-b', // BTC.b
+    '0x2416092f143378750bb29b79eD961ab195CcEea5': 'renzo-restaked-eth', // ezETH
   },
 };
 
