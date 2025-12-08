@@ -7,7 +7,6 @@ import { sequentialPromiseFlatMap, sequentialPromiseMap } from '#root/utils/Asyn
 import { ZERO_ADDRESS } from '#root/utils/Web3/web3.js';
 
 const DISABLED_NETWORK_IDS = [
-  'stable', // Not publicly available yet
 ];
 
 const octokit = new Octokit({
