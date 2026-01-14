@@ -21,6 +21,7 @@ const MULTICALL_CHUNKS_SIZE = {
   default: 200,
   arbitrum: 100,
   polygon: 100,
+  arc: 100,
 };
 
 // Contract instances cache store
