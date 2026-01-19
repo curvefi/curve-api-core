@@ -9,6 +9,12 @@ import { ZERO_ADDRESS } from '#root/utils/Web3/web3.js';
 const DISABLED_NETWORK_IDS = [
 ];
 
+// Overrides for networks requiring a private rpc endpoint in order to work; this is unideal
+// and should be considered exceptional
+const RPC_URLS_OVERRIDES = {
+  arc: `https://direct.drpc.org/ogrpc?network=arc-testnet&dkey=${process.env.DRPC_API_KEY}`
+};
+
 const octokit = new Octokit({
   auth: process.env.GITHUB_FINE_GRAINED_PERSONAL_ACCESS_TOKEN,
   userAgent: process.env.GITHUB_API_UA,
@@ -91,4 +97,11 @@ const getConfigs = memoize(async (returnOnlyEnabledNetworkIds = true) => {
   length: 1,
 });
 
+const getResolvedRpcUrl = (url, network) => (
+  RPC_URLS_OVERRIDES[network] ?? url
+);
+
 export default getConfigs;
+export {
+  getResolvedRpcUrl,
+};

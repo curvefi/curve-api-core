@@ -4,6 +4,7 @@ import { multiCall } from '#root/utils/Calls.js';
 import ERC20ABI from '#root/constants/abis/erc20.json' assert { type: 'json' };
 import { flattenArray, arrayToHashmap } from '#root/utils/Array.js';
 import { lc } from '#root/utils/String.js';
+import { getResolvedRpcUrl } from '#root/constants/configs/configs.js';
 
 const cache = new Map();
 
@@ -14,7 +15,7 @@ const fetchTokensData = async (tokenAddresses, blockchainId = 'ethereum') => {
     multicall2Address,
   } = config;
 
-  const web3 = new Web3(rpcUrl);
+  const web3 = new Web3(getResolvedRpcUrl(rpcUrl, blockchainId));
   const networkSettingsParam = (
     typeof multicall2Address !== 'undefined' ?
       { networkSettings: { web3, multicall2Address } } :

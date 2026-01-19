@@ -3,6 +3,7 @@
 import Web3 from 'web3';
 import memoize from 'memoizee';
 import Multicall from '#root/constants/abis/multicall.json' assert { type: 'json' };
+import { getResolvedRpcUrl } from '#root/constants/configs/configs.js';
 
 const ethereumWeb3Config = {
   web3: new Web3(`https://lb.drpc.org/ogrpc?network=ethereum&dkey=${process.env.DRPC_API_KEY}`),
@@ -129,7 +130,7 @@ const changeNetwork = async (config) => {
         symbol: config.nativeCurrency.symbol,
         decimals: config.nativeCurrency.decimals,
       },
-      rpcUrls: [config.rpcUrl],
+      rpcUrls: [getResolvedRpcUrl(config.rpcUrl, config.shortId)],
     }],
   });
 

@@ -18,6 +18,7 @@ import { sequentialPromiseFlatMap } from '#root/utils/Async.js';
 import { ethereumWeb3Config } from '#root/utils/Web3/web3.js';
 import memoize from 'memoizee';
 import getAssetsPrices from '#root/utils/data/assets-prices.js';
+import { getResolvedRpcUrl } from '#root/constants/configs/configs.js';
 
 const getFactoGaugesForPools = memoize(async (poolsData, blockchainId) => {
   const config = (await getConfigs())[blockchainId];
@@ -29,7 +30,7 @@ const getFactoGaugesForPools = memoize(async (poolsData, blockchainId) => {
     throw new Error(`Missing chain id in config for "${blockchainId}"`);
   }
 
-  const web3Side = new Web3(config.rpcUrl);
+  const web3Side = new Web3(getResolvedRpcUrl(config.rpcUrl, blockchainId));
 
   // 0xabc is the generic gauge registry address for all sidechains, the config prop allows exceptions
   const gaugeRegistryAddress = config.gaugeRegistryAddress ?? '0xabc000d88f23bb45525e447528dbf656a9d55bf5';

@@ -50,6 +50,7 @@ import toSpliced from 'core-js-pure/actual/array/to-spliced.js'; // For compat w
 import getFactoGaugesForPools from '#root/utils/data/getFactoGaugesForPools.js';
 import getEywaTokenPrices from '#root/utils/data/getEywaTokenPrices.js';
 import { SONIC_FACTO_STABLE_NG_EYWA_POOL_IDS, TAIKO_FACTO_STABLE_NG_EYWA_POOL_IDS } from '#root/constants/PoolMetadata.js';
+import { getResolvedRpcUrl } from '#root/constants/configs/configs.js';
 
 /* eslint-disable */
 const POOL_BALANCE_ABI_UINT256 = [{ "gas": 1823, "inputs": [{ "name": "arg0", "type": "uint256" }], "name": "balances", "outputs": [{ "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }];
@@ -173,7 +174,7 @@ const getPools = async ({ blockchainId, registryId }) => {
   );
 
 
-  const web3 = new Web3(rpcUrl);
+  const web3 = new Web3(getResolvedRpcUrl(rpcUrl, blockchainId));
   const registry = new web3.eth.Contract(REGISTRY_ABI, registryAddress);
 
   const networkSettingsParam = (

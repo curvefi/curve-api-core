@@ -13,6 +13,7 @@ import SIDECHAIN_FACTO_GAUGE_ABI from '#root/constants/abis/sidechain-gauge.json
 import getCoinAddressCoingeckoIdMap from '#root/constants/CoinAddressCoingeckoIdMap.js';
 import { getTokenPrice } from '#root/utils/data/tokens-prices-store.js';
 import { lc } from '#root/utils/String.js';
+import { getResolvedRpcUrl } from '#root/constants/configs/configs.js';
 
 export default memoize(async ({ blockchainId, gauges }) => {
   const config = (await getConfigs())[blockchainId];
@@ -22,7 +23,7 @@ export default memoize(async ({ blockchainId, gauges }) => {
 
   const COIN_ADDRESS_COINGECKO_ID_MAP = await getCoinAddressCoingeckoIdMap();
   const multicallNetworkSettings = {
-    web3: new Web3(config.rpcUrl),
+    web3: new Web3(getResolvedRpcUrl(config.rpcUrl, blockchainId)),
     multicall2Address: config.multicall2Address,
   };
 
