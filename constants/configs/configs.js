@@ -5,6 +5,7 @@ import memoize from 'memoizee';
 import { Octokit } from '@octokit/rest';
 import { sequentialPromiseFlatMap, sequentialPromiseMap } from '#root/utils/Async.js';
 import { ZERO_ADDRESS } from '#root/utils/Web3/web3.js';
+import swr from '#root/utils/swr.js';
 
 const DISABLED_NETWORK_IDS = [
 ];
@@ -22,19 +23,35 @@ const octokit = new Octokit({
 
 const getConfigs = memoize(async (returnOnlyEnabledNetworkIds = true) => {
   const filePaths = await sequentialPromiseFlatMap(['devnet', 'prod'], async (folder) => (
-    octokit.rest.repos.getContent({
-      owner: 'curvefi',
-      repo: 'curve-core',
-      path: `deployments/${folder}`,
-    }).then(({ data }) => data.map(({ path }) => path))
+    (await swr( // Using redis 10m cache to prevent hammering the GitHub API
+      `github-getContent-deployments/${folder}`,
+      async () => (
+        octokit.rest.repos.getContent({
+          owner: 'curvefi',
+          repo: 'curve-core',
+          path: `deployments/${folder}`,
+        }).then(({ data }) => data.map(({ path }) => path))
+      ),
+      { // See CacheSettings.js
+        minTimeToStale: 10 * 60 * 1000, // 10 min
+      }
+    )).value
   ));
 
   const configs = await sequentialPromiseMap(filePaths, async (filePath) => (
-    octokit.rest.repos.getContent({
-      owner: 'curvefi',
-      repo: 'curve-core',
-      path: filePath,
-    }).then(({ data: { content } }) => {
+    swr( // Using redis 10m cache to prevent hammering the GitHub API
+      `github-getContent-deployments/${filePath}`,
+      async () => (
+        octokit.rest.repos.getContent({
+          owner: 'curvefi',
+          repo: 'curve-core',
+          path: filePath,
+        })
+      ),
+      { // See CacheSettings.js
+        minTimeToStale: 10 * 60 * 1000, // 10 min
+      }
+    ).then(({ value }) => value).then(({ data: { content } }) => {
       const yamlFile = Buffer.from(content, 'base64').toString();
       const yamlConfig = YAML.parse(yamlFile);
 
