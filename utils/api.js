@@ -12,6 +12,11 @@ const allRegistryIds = [
   'factory-stable-ng',
   'factory-twocrypto',
   'factory-tricrypto',
+  'main', // Meant to accommodate old non-core deployments that were downgraded to core
+  'crypto', // Meant to accommodate old non-core deployments that were downgraded to core
+  'factory-v2', // Meant to accommodate old non-core deployments that were downgraded to core
+  'factory-crypto', // Meant to accommodate old non-core deployments that were downgraded to core
+  'factory-eywa', // Meant to accommodate old non-core deployments that were downgraded to core
 ];
 
 const formatJsonSuccess = ({ generatedTimeMs, ...data }, success = true) => ({
