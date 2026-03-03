@@ -45,6 +45,7 @@ const HIDDEN_POOLS_IDS = {
   monad: [
     'factory-stable-ng-5', // Team asked to hide
     'factory-stable-ng-7', // Team asked to hide
+    'factory-stable-ng-17', // Pool deployed incorrectly
   ],
 };
 
