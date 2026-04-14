@@ -46,6 +46,7 @@ const HIDDEN_POOLS_IDS = {
     'factory-stable-ng-5', // Team asked to hide
     'factory-stable-ng-7', // Team asked to hide
     'factory-stable-ng-17', // Pool deployed incorrectly
+    'factory-stable-ng-20', // Pool deployed incorrectly, team asked to hide
   ],
 };
 
