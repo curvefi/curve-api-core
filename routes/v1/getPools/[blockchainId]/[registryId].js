@@ -81,6 +81,10 @@ const IGNORED_COINS = {
     '0x927B51f251480a681271180DA4de28D44EC4AfB8', // suspicius token
     '0x1AE5c230a480Cd9226411271D137cb9BbD201f30', // causing issues
     '0x61cfE4FA9a14EcD63CFE0BCE13021c13f9F039E6', // causing issues
+    '0xb6A3E8e5715fd4c99EcEDaaAe121bDe4Ab6a1Ef1', // causing issues
+    '0xEb64b50FeF2A363940369285F86Ae9a68211db59', // causing issues
+    '0x9D24Af30bcE2018bd3F75E53314D400b03F20E5F', // causing issues
+    '0x5a53B6D19D8EDCb7923F0D840EeBB3f09BBeEfB7', // causing issues
   ].map(lc),
 };
 
