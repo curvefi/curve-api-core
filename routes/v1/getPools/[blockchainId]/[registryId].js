@@ -76,6 +76,12 @@ const IGNORED_COINS = {
     '0xCCA84731C19EB911C985E9d1892E0935C104Abce', // spam
     '0xCfEc8129ecf97e56F106392c04eD02BC20fC7FeC', // spam
   ].map(lc),
+  unichain: [
+    '0x8AFE3Ad0Ad6661230D032c25dfAe2Ff8c155430d', // causing issues
+    '0x927B51f251480a681271180DA4de28D44EC4AfB8', // suspicius token
+    '0x1AE5c230a480Cd9226411271D137cb9BbD201f30', // causing issues
+    '0x61cfE4FA9a14EcD63CFE0BCE13021c13f9F039E6', // causing issues
+  ].map(lc),
 };
 
 // Tokens for which to use Defillama as external price oracle
