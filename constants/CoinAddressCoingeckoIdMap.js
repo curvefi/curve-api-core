@@ -92,7 +92,7 @@ const HARDCODED_DATA = {
     '0x2416092f143378750bb29b79eD961ab195CcEea5': 'renzo-restaked-eth', // ezETH
     '0xd18B7EC58Cdf4876f6AFebd3Ed1730e4Ce10414b': 'coinbase-wrapped-btc', // cbBTC
   },
-  avalanche: {
+  'avalanche': {
     '0xd586e7f844cea2f87f50152665bcbc2c279d8d70': 'dai', // DAI
     '0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e': 'usd-coin', // USDC
     '0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7': 'tether', // USDT
@@ -122,7 +122,7 @@ const HARDCODED_DATA = {
     '0x9eE1963f05553eF838604Dd39403be21ceF26AA4': 'parallel-usdp', // USDp
     '0x80Eede496655FB9047dd39d9f418d5483ED600df': 'frax-usd', // frxUSD
   },
-  fantom: {
+  'fantom': {
     '0x74b23882a30290451a17c44f4f05243b6b58c76d': 'weth', // WETH
     '0x321162cd933e2be498cd2267a90534a804051b11': 'wrapped-bitcoin', // WBTC
     '0x4e15361fd6b4bb609fa63c81a2be19d873717870': 'fantom', // FTM
@@ -138,6 +138,9 @@ const HARDCODED_DATA = {
     '0x88486E058865611c939D1077725F293378E7bD75': 'dai', // sDAI_BSC, base price for price inferences on eywa facto pools
     '0xC4417bE9c9b3f682fd03224A4B29e01CE34602fE': 'true-usd', // sTUSD_BSC, base price for price inferences on eywa facto pools
   },
+  'robinhood': {
+    '0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168': 'global-dollar', // USDG
+    '0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34': 'ethena-usde', // USDe
 };
 
 const getCoinAddressCoingeckoIdMap = memoize(async () => {
