@@ -75,6 +75,7 @@ const IGNORED_COINS = {
     '0x01Ef898242d5D95B00880b9c49Ca3dEa7b0199aC', // spam
     '0xCCA84731C19EB911C985E9d1892E0935C104Abce', // spam
     '0xCfEc8129ecf97e56F106392c04eD02BC20fC7FeC', // spam
+    '0x4772D2e014F9fC3a820C444e3313968e9a5C8121', // causing issues
   ].map(lc),
   unichain: [
     '0x8AFE3Ad0Ad6661230D032c25dfAe2Ff8c155430d', // causing issues
