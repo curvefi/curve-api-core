@@ -143,6 +143,9 @@ const HARDCODED_DATA = {
     '0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34': 'ethena-usde', // USDe
     '0x0Bd7D308f8E1639FAb988df18A8011f41EAcAD73': 'weth', // WETH
   },
+  'xdc': {
+    '0xfA2958CB79b0491CC627c1557F441eF849Ca8eb1': 'usd-coin', // USDC
+  },
 };
 
 const getCoinAddressCoingeckoIdMap = memoize(async () => {
