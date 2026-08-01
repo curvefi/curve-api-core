@@ -145,6 +145,8 @@ const HARDCODED_DATA = {
   },
   'xdc': {
     '0xfA2958CB79b0491CC627c1557F441eF849Ca8eb1': 'usd-coin', // USDC
+    '0x4809010926aec940b550D34a46A52739f996D75D': 'wrapped-savings-rusd', // wsrUSD
+    '0x7054f74d6cB418e987b73c9f3c23e5cEc18217b2': 'yieldnest-rwa-max', // ynRWAx
   },
 };
 
