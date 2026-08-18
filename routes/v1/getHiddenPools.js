@@ -108,6 +108,7 @@ const HIDDEN_POOLS_IDS = {
     'factory-stable-ng-61', // Malicious oracle
     'factory-stable-ng-62', // Malicious oracle
     'factory-stable-ng-63', // Malicious oracle
+    'factory-stable-ng-64', // Malicious oracle
   ],
 };
 
