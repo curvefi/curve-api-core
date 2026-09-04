@@ -8,7 +8,6 @@ import { ZERO_ADDRESS } from '#root/utils/Web3/web3.js';
 import swr from '#root/utils/swr.js';
 
 const DISABLED_NETWORK_IDS = [
-  'tac', // Disabled temporarily
 ];
 
 // Overrides for networks requiring a private rpc endpoint in order to work; this is unideal
