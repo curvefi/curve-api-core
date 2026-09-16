@@ -12,9 +12,7 @@ const DISABLED_NETWORK_IDS = [
 
 // Overrides for networks requiring a private rpc endpoint in order to work; this is unideal
 // and should be considered exceptional
-const RPC_URLS_OVERRIDES = {
-  arc: `https://direct.drpc.org/ogrpc?network=arc-testnet&dkey=${process.env.DRPC_API_KEY}`
-};
+const RPC_URLS_OVERRIDES = {};
 
 const octokit = new Octokit({
   auth: process.env.GITHUB_FINE_GRAINED_PERSONAL_ACCESS_TOKEN,

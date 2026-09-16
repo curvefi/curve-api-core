@@ -276,12 +276,11 @@ const getPools = async ({ blockchainId, registryId }) => {
     }
   }
 
-  let poolCount = Number((await multiCall([{
+  const poolCount = Number((await multiCall([{
     contract: registry,
     methodName: 'pool_count',
     ...networkSettingsParam,
   }]))[0]);
-  if (blockchainId === 'arc') poolCount = Math.min(poolCount, 500); // Prevent spam from overloading api-core server on Arc Testnet
   if (poolCount === 0) return { poolData: [], tvlAll: 0, tvl: 0 };
 
   const unfilteredPoolIds = Array(poolCount).fill(0).map((_, i) => i);
