@@ -10,6 +10,16 @@ import swr from '#root/utils/swr.js';
 const DISABLED_NETWORK_IDS = [
 ];
 
+const DISABLED_POOLS_ADDRESSES_BY_NETWORK = {
+  robinhood: [
+    '0x3B380e190074Cb565847fbcDca295698b8d89B5f', // WETH/USDG — reverts: above maxRate
+    '0xE6Bca8B387a79B226897379645700e37b8055D53', // WETH/USDG — reverts: above maxRate
+    '0x450D87E8506c2eBD752338749E049cD6C8cba1FC', // WETH — reverts: execution reverted (no reason)
+    '0xD1A9c24F9F14eDc79FB6AFD4fb3526DC7EBb7d83', // unnamed — reverts: unrecognized custom error 0x92bbf6e8
+    '0x9fae4B24c201AA513Cd9EAE8C4e0FA8bfb15c03F', // unnamed — reverts: unrecognized custom error 0x92bbf6e8
+  ],
+};
+
 // Overrides for networks requiring a private rpc endpoint in order to work; this is unideal
 // and should be considered exceptional
 const RPC_URLS_OVERRIDES = {};
@@ -96,7 +106,7 @@ const getConfigs = memoize(async (returnOnlyEnabledNetworkIds = true) => {
           ...(yamlConfig.contracts.amm.tricryptoswap ? [[lc(yamlConfig.contracts.amm.tricryptoswap.implementation.address).toLowerCase(), 'tricrypto-optimized']] : []),
         ]),
         BASE_POOL_LP_TO_GAUGE_LP_MAP: new Map([]),
-        DISABLED_POOLS_ADDRESSES: [].map(lc),
+        DISABLED_POOLS_ADDRESSES: (DISABLED_POOLS_ADDRESSES_BY_NETWORK[networkId] || []).map(lc),
         referenceTokenAddresses: {
           usdc: yamlConfig.config.reference_token_addresses?.usdc || undefined,
           usdt: yamlConfig.config.reference_token_addresses?.usdt || undefined,
