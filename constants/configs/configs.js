@@ -18,6 +18,9 @@ const DISABLED_POOLS_ADDRESSES_BY_NETWORK = {
     '0xD1A9c24F9F14eDc79FB6AFD4fb3526DC7EBb7d83', // unnamed — reverts: unrecognized custom error 0x92bbf6e8
     '0x9fae4B24c201AA513Cd9EAE8C4e0FA8bfb15c03F', // unnamed — reverts: unrecognized custom error 0x92bbf6e8
   ],
+  xdc: [
+    '0x1436e4Ca2c687335b7c5E1b446AE532b9e287160', // ynRWAx/USDC — reverts and causing issues
+  ],
 };
 
 // Overrides for networks requiring a private rpc endpoint in order to work; this is unideal
