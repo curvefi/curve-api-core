@@ -143,6 +143,7 @@ const HARDCODED_DATA = {
     '0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168': 'global-dollar', // USDG
     '0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34': 'ethena-usde', // USDe
     '0x0Bd7D308f8E1639FAb988df18A8011f41EAcAD73': 'weth', // WETH
+    '0x2dC99af320BC317c567f24eE95811dcbd5983DfD': 'wrapped-steth', // wstETH
   },
   'xdc': {
     '0xfA2958CB79b0491CC627c1557F441eF849Ca8eb1': 'usd-coin', // USDC
