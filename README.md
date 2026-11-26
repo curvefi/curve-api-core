@@ -51,3 +51,4 @@ If an ETH LST is missing from this list, feel free to add it: [info on how to do
 - Environment variables:
   - Dev env variables are injected by dotenv-safe, using `.env.default` as template, and using values from `.env`
   - Prod env variables are injected by ElasticBeanstalk env variables
+.
